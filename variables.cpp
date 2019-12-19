@@ -45,7 +45,7 @@ varStruct variables::getVarFromName(string v) {
 varStruct* variables::getVarFromSim(string v) {
     return simMap[v];
 }
-
+//
 void variables::initialize(){
     varStruct *v = new varStruct;
     string name;
