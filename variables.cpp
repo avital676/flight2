@@ -6,6 +6,7 @@
 
 variables* variables::instance = 0;
 using namespace std;
+
 variables::variables() {
     initialize();
 }
@@ -19,7 +20,6 @@ variables* variables::getInstance() {
 unordered_map<string, varStruct*> variables::getSimMap() {
     return simMap;
 }
-
 
 
 void variables::setVarInMap(string v, varStruct s) {

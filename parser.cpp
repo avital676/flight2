@@ -26,9 +26,8 @@ parser::parser(vector<string> v) {
 void parser::parse() {
     int i = 0;
     command* c;
-    //map<string,varStruct> m = variables::getInstance()->getNameMap();
     while (i < token.size()) {
-        map<string, varStruct> m=variables::getInstance()->getNameMap();
+        unordered_map<string, varStruct> m =variables::getInstance()->getNameMap();
         if (comMap.find(token[i]) != comMap.end()) {
             c = comMap[token[i]];
             i += c->execute(i, token);

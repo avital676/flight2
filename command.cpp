@@ -9,6 +9,7 @@
 #include <arpa/inet.h>
 #include <thread>
 #include <string>
+#include <cstring>
 #include "command.h"
 #include "variables.h"
 #include "server.h"
@@ -81,8 +82,26 @@ int clientMng(string port, string ip) {
     if (is_connect == -1) {
         cerr << "Could not connect to host server" << endl;
         return -2;
-    } else {
-        // client is connected
+    } else { // client is connected
+        int is_sent;
+        while(true) {
+            stack<varStruct> stk = variables::getInstance()->stk;
+            char strV[]="";
+            if(stk.empty()) {
+                sleep(0.1);
+            } else {
+                while (!stk.empty()) {
+                    string s = "set " + stk.top().sim + " " + to_string(stk.top().value);
+                    char strToSend[s.length()+1];
+                    strcpy(strToSend, s.c_str());
+                    is_sent = send(client_socket, strToSend, strlen(strV), 0);
+                    if (is_sent == -1) {
+                        cerr << "error sending message" << endl;
+                    }
+                    stk.pop();
+                }
+            }
+        }
     }
     return 0;
 }
@@ -107,7 +126,7 @@ int ConnectCommand::execute(int i, vector<string> v) {
 
 int DefineVarCommand::execute(int i, vector<string> v) {
     cout << "dedine var execute" << endl;
-    varStruct *var = new varStruct;
+    varStruct* var = new varStruct;
     string varName;
     if (v[i] == "var") {
         varName = v[i + 1];
@@ -127,6 +146,7 @@ int DefineVarCommand::execute(int i, vector<string> v) {
         var->value = express(v[i + 2]);
         variables::getInstance()->setVarInMap(varName, *var);
     }
+    variables::getInstance()->stk.push(*var);
     return numOfPar + 1;
 }
 

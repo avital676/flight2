@@ -8,6 +8,7 @@
 #include <string>
 #include <unordered_map>
 #include <mutex>
+#include <stack>
 
 using namespace std;
 
@@ -28,12 +29,13 @@ private:
 
 public:
     static variables *getInstance();
-    unordered_map<string, varStruct *> getSimMap();
+    unordered_map<string, varStruct*> getSimMap();
     unordered_map<string, varStruct> getNameMap();
     void setVarInMap(string v, varStruct s);
     varStruct getVar(string v);
     varStruct* searchSim(string s);
     string nameArr[23];
+    stack<varStruct> stk;
 };
 
 #endif //FLIGHT1_VARIABLES_H
