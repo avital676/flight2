@@ -1,0 +1,5 @@
+
+manager: decides when to turn off the server
+client
+connect: update server with new values
+func
