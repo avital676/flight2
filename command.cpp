@@ -58,6 +58,7 @@ int openSer(int port, bool is_open) {
     int valread;
     while (true) {
         valread = read( client_socket , buffer, 1024);
+        cout<<buffer<<endl;
         ser.dataToMap(buffer);
 
     }
@@ -82,7 +83,6 @@ int clientMng(string port, string ip) {
         return -2;
     } else {
         // client is connected
-        cout<< "connected"<< endl;
     }
     return 0;
 }

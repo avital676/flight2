@@ -63,8 +63,8 @@ public:
                     if ((linesVector[i][j] == '(') || (linesVector[i][j] == ')')) {
                         token.push_back(word);
                         int k = linesVector[i].length();
-                        string word2 = linesVector[i].substr(j + 1, (k - 2));
-                        word=word2;
+                       // string word2 = linesVector[i]
+                        word=sub_last_tub(linesVector[i], j+1, linesVector[i].length()-1);
                         for (int t = 0; t < word.length(); t++) {
                             if (word[t] == ',') {
                                 string subWord = word.substr(0, t);
@@ -93,12 +93,17 @@ public:
 
                         } else {
                             //=
-                            if ((linesVector[i][j] == '=') && (linesVector[i][j + 1] == ' ') &&
-                                (linesVector[i][j - 1] == ' ')) {
+                            if ((linesVector[i][j] == '=')&&(linesVector[i][j-1]!='+')&&(linesVector[i][j-1]!='-')
+                            &&(linesVector[i][j-1]!='<')&&((linesVector[i][j-1]!='>'))&&(linesVector[i][j-1]!='!')) {
                                 token.push_back(word);
                                 word = linesVector[i][j];
                                 token.push_back(word);
-                                word = linesVector[i].substr(j + 2, linesVector[i].length());
+                                if (linesVector[i][j+1]==' '){
+                                    word = linesVector[i].substr(j + 2, linesVector[i].length());
+                                }
+                                else {
+                                    word = linesVector[i].substr(j + 1, linesVector[i].length());
+                                }
                                 token.push_back(word);
                                 word = "";
                                 j = linesVector[i].length();
@@ -136,5 +141,12 @@ public:
 
         file.close();
         return token;
+    }
+    string sub_last_tub(string s, int start, int end){
+        string word="";
+        for (int i=start; i< end; i++){
+            word+=s[i];
+        }
+        return word;
     }
 };

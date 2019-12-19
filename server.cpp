@@ -18,10 +18,13 @@ void server::dataToMap(string data) {
     map<string, varStruct> m = variables::getInstance()->getNameMap();
     string s = "";
     int i;
+    int counter=0;
     for (i = 0; i < data.size(); i++) {
         if (data[i] != ',') {
             s += data[i];
         } else {
+            string sim = variables::getInstance()->simAr[counter];
+            counter++;
             varStruct* v = variables::getInstance()->searchSim(s);
             v->value = stoi(s);
             s = "";

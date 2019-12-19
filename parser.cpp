@@ -6,7 +6,7 @@
 #include <vector>
 #include "parser.h"
 #include "variables.h"
-
+#include <iostream>
 using namespace std;
 
 parser::parser(vector<string> v) {
@@ -28,10 +28,12 @@ void parser::parse() {
     command* c;
     //map<string,varStruct> m = variables::getInstance()->getNameMap();
     while (i < token.size()) {
+        map<string, varStruct> m=variables::getInstance()->getNameMap();
         if (comMap.find(token[i]) != comMap.end()) {
             c = comMap[token[i]];
             i += c->execute(i, token);
-        } else if (variables::getInstance()->getNameMap().find(token[i]) != variables::getInstance()->getNameMap().end()) {
+        } else if (m.find(token[i]) != m.end()) {
+            cout<<m.size()<<endl;
             i+=comMap["var"] -> execute(i, token);
 //            varStruct var = variables::getInstance()->getVar(token[i]);
 //            var.value = c->express(token[i + 2]);

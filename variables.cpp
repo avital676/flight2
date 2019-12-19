@@ -114,6 +114,7 @@ void variables::initialize(){
 
     v->sim= "/engines/engine/rpm";
     simMap["engine_rpm"]= v;
+
 }
 
 unordered_map<string, varStruct> variables::getNameMap() {
