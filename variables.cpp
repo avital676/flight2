@@ -5,6 +5,7 @@
 #include "variables.h"
 
 variables* variables::instance = 0;
+
 using namespace std;
 
 variables::variables() {
@@ -37,8 +38,12 @@ void variables::setVarInMap(string v, varStruct s) {
     mutex_lock.unlock();
 }
 
-varStruct variables::getVar(string v) {
+varStruct variables::getVarFromName(string v) {
     return nameMap[v];
+}
+
+varStruct* variables::getVarFromSim(string v) {
+    return simMap[v];
 }
 
 void variables::initialize(){

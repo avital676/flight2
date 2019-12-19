@@ -25,7 +25,8 @@ void acceptFromSimu(int client_socket) {
     while (keepThreads::getInstance()->is_open) {
         cout << "reading" << endl;
         valread = read( client_socket , buffer, 1024);
-        cout << buffer << endl;
+        //cout<<buffer[0]<<endl;
+        //cout << buffer << endl;
         ser.dataToMap(buffer);
     }
 }
@@ -133,7 +134,9 @@ int openSer(int port) {
 //    return 0;
 //}
 
-int openCli(string port, string ip) {
+
+int openCli(int port, string ip) {
+    sleep(30);
     int client_socket = socket(AF_INET, SOCK_STREAM, 0);
     if (client_socket == -1) {
         cerr << "Could not create a socket" << endl;
@@ -143,7 +146,7 @@ int openCli(string port, string ip) {
     address.sin_family = AF_INET;
     const char* ipConst = ip.c_str();
     address.sin_addr.s_addr = inet_addr(ipConst);
-    address.sin_port = htons(stoi(port));
+    address.sin_port = htons(port);
     // request connection with server:
     int is_connect = connect(client_socket, (struct sockaddr*) &address, sizeof(address));
     if (is_connect == -1) {
@@ -158,19 +161,12 @@ int openServerCommand::execute(int i, vector<string> v) {
     cout << "openserver execute" << endl;
     int port = stoi(v[i + 1]);
     openSer(port);
-    //thread serverT(openSer, port, &is_open);
-    //serverT.join();
-
-    //sleep(5);
-//    while (!is_open) {
-//        sleep(3);
-//    }
     return numOfPar + 1;
 }
 
 int ConnectCommand::execute(int i, vector<string> v) {
-    openCli(v[i + 1], v[i + 2]);
-    //thread clientT(clientMng, v[i + 1], v[i + 2]);
+    int port = stoi(v[i + 1]);
+    openCli(port, v[i + 2]);
     return numOfPar + 1;
 }
 
@@ -192,7 +188,7 @@ int DefineVarCommand::execute(int i, vector<string> v) {
         variables::getInstance()->setVarInMap(varName, *var);
     } else {
         varName = v[i];
-        *var = variables::getInstance()->getVar(v[i]);
+        *var = variables::getInstance()->getVarFromName(v[i]);
         var->value = express(v[i + 2]);
         variables::getInstance()->setVarInMap(varName, *var);
     }
@@ -223,7 +219,7 @@ int ifCommand::execute(int i, vector<string> v) {
     int index;
     //if var  {...}
     if (v[i+2] == "{"){
-        varStruct v1=variables::getInstance()->getVar(v[i + 1]);
+        varStruct v1=variables::getInstance()->getVarFromName(v[i + 1]);
         if (v1.value>0){
             status= true;
             index=i+3;
@@ -373,7 +369,7 @@ for (int i =0; i < s.length(); i++){
         while((s[i]!='+')&&(s[i]!='*')&&(s[i]!='-')&&(s[i]!='/')){
             var+=s[i];
         }
-        float value = variables::getInstance()->getVar(var).value;
+        float value = variables::getInstance()->getVarFromName(var).value;
         allVars+=var+"="+ to_string(value)+";";
     }
 }
