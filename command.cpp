@@ -15,10 +15,44 @@
 #include "server.h"
 #include "parser.h"
 #include "Interpreter.h"
+#include "keepThreads.h"
 
-
-int openSer(int port, bool is_open) {
+void acceptFromSimu(int client_socket) {
     server ser = new server();
+    //reading from client
+    char buffer[1024] = {0};
+    int valread;
+    while (keepThreads::getInstance()->is_open) {
+        cout << "reading" << endl;
+        valread = read( client_socket , buffer, 1024);
+        cout << buffer << endl;
+        ser.dataToMap(buffer);
+    }
+}
+
+void sendToSimu(int client_socket) {
+    int is_sent;
+    while(keepThreads::getInstance()->is_open) {
+        queue<varStruct> q = variables::getInstance()->q;
+        char strV[]="";
+        if(q.empty()) {
+            sleep(0.1);
+        } else {
+            while (!q.empty()) {
+                string s = "set " + q.front().sim + " " + to_string(q.front().value);
+                char strToSend[s.length()+1];
+                strcpy(strToSend, s.c_str());
+                is_sent = send(client_socket, strToSend, strlen(strV), 0);
+                if (is_sent == -1) {
+                    cerr << "error sending message" << endl;
+                }
+                q.pop();
+            }
+        }
+    }
+}
+
+int openSer(int port) {
     //create socket
     int socketfd = socket(AF_INET, SOCK_STREAM, 0);
     if (socketfd == -1) {
@@ -43,7 +77,7 @@ int openSer(int port, bool is_open) {
         std::cout<<"Server is now listening ..."<<std::endl;
     }
     cout << port << endl;
-    is_open = true;
+    keepThreads::getInstance()->is_open = true;
     // accepting a client
     int client_socket = accept(socketfd, (struct sockaddr *)&address,
                                (socklen_t*)&address);
@@ -55,20 +89,51 @@ int openSer(int port, bool is_open) {
 
     close(socketfd);
 
-    //reading from client
-    char buffer[1024] = {0};
-    int valread;
-    while (true) {
-        cout << "reading" << endl;
-        valread = read( client_socket , buffer, 1024);
-        cout << buffer << endl;
-        ser.dataToMap(buffer);
-
-    }
+    keepThreads::getInstance()->serverTread = thread(acceptFromSimu, client_socket);
     return 0;
 }
 
-int clientMng(string port, string ip) {
+//int clientMng(string port, string ip) {
+//    int client_socket = socket(AF_INET, SOCK_STREAM, 0);
+//    if (client_socket == -1) {
+//        cerr << "Could not create a socket" << endl;
+//        return -1;
+//    }
+//    sockaddr_in address;
+//    address.sin_family = AF_INET;
+//    const char* ipConst = ip.c_str();
+//    address.sin_addr.s_addr = inet_addr(ipConst);
+//    address.sin_port = htons(stoi(port));
+//    // request connection with server:
+//    int is_connect = connect(client_socket, (struct sockaddr*) &address, sizeof(address));
+//    if (is_connect == -1) {
+//        cerr << "Could not connect to host server" << endl;
+//        return -2;
+//    } else { // client is connected
+//        int is_sent;
+//        while(true) {
+//            queue<varStruct> q = variables::getInstance()->q;
+//            char strV[]="";
+//            if(q.empty()) {
+//                sleep(0.1);
+//            } else {
+//                while (!q.empty()) {
+//                    string s = "set " + q.front().sim + " " + to_string(q.front().value);
+//                    char strToSend[s.length()+1];
+//                    strcpy(strToSend, s.c_str());
+//                    is_sent = send(client_socket, strToSend, strlen(strV), 0);
+//                    if (is_sent == -1) {
+//                        cerr << "error sending message" << endl;
+//                    }
+//                    q.pop();
+//                }
+//            }
+//        }
+//    }
+//    return 0;
+//}
+
+int openCli(string port, string ip) {
     int client_socket = socket(AF_INET, SOCK_STREAM, 0);
     if (client_socket == -1) {
         cerr << "Could not create a socket" << endl;
@@ -85,36 +150,17 @@ int clientMng(string port, string ip) {
         cerr << "Could not connect to host server" << endl;
         return -2;
     } else { // client is connected
-        int is_sent;
-        while(true) {
-            queue<varStruct> q = variables::getInstance()->q;
-            char strV[]="";
-            if(q.empty()) {
-                sleep(0.1);
-            } else {
-                while (!q.empty()) {
-                    string s = "set " + q.front().sim + " " + to_string(q.front().value);
-                    char strToSend[s.length()+1];
-                    strcpy(strToSend, s.c_str());
-                    is_sent = send(client_socket, strToSend, strlen(strV), 0);
-                    if (is_sent == -1) {
-                        cerr << "error sending message" << endl;
-                    }
-                    q.pop();
-                }
-            }
-        }
+        keepThreads::getInstance()->clientTread = thread(sendToSimu, client_socket);
     }
-    return 0;
 }
-
 
 int openServerCommand::execute(int i, vector<string> v) {
     cout << "openserver execute" << endl;
-    volatile bool is_open = false;
     int port = stoi(v[i + 1]);
-    thread serverT(openSer, port, &is_open);
-    serverT.join();
+    openSer(port);
+    //thread serverT(openSer, port, &is_open);
+    //serverT.join();
+
     //sleep(5);
 //    while (!is_open) {
 //        sleep(3);
@@ -123,7 +169,8 @@ int openServerCommand::execute(int i, vector<string> v) {
 }
 
 int ConnectCommand::execute(int i, vector<string> v) {
-    thread clientT(clientMng, v[i + 1], v[i + 2]);
+    openCli(v[i + 1], v[i + 2]);
+    //thread clientT(clientMng, v[i + 1], v[i + 2]);
     return numOfPar + 1;
 }
 

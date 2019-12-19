@@ -5,6 +5,7 @@
 #ifndef FLIGHT1_MANAGER_H
 #define FLIGHT1_MANAGER_H
 
+#include <thread>
 #include "Interpreter.h"
 #include "ex1.h"
 #include "server.h"
@@ -17,6 +18,7 @@
 
 class manager {
 private:
+
     manager(){};
     static manager* instance;
 public:
