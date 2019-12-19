@@ -47,148 +47,175 @@ varStruct* variables::getVarFromSim(string v) {
 }
 //
 void variables::initialize(){
-    varStruct *v = new varStruct;
+    varStruct *v0 = new varStruct;
     string name;
     name = "airspeed-indicator_indicated-speed-kt";
     nameArr[0] = name;
-    v->sim= "/instrumentation/airspeed-indicator/indicated-speed-kt";
-    simMap.insert({name,v});
+    v0->sim= "/instrumentation/airspeed-indicator/indicated-speed-kt";
+    simMap.insert({name, v0});
     //simMap[name]= v;
 
+    varStruct *v1 = new varStruct;
     name = "time_warp";
     nameArr[1] = name;
-    v->sim= "/sim/time/warp";
-    simMap[name]= v;
+    v1->sim= "/sim/time/warp";
+    simMap[name]= v1;
 
+    varStruct *v2 = new varStruct;
     name = "switches_magnetos";
     nameArr[2] = name;
-    v->sim= "/controls/switches/magnetos";
-    simMap[name]= v;
+    v2->sim= "/controls/switches/magnetos";
+    simMap[name]= v2;
 
+    varStruct *v3 = new varStruct;
     name = "heading-indicator_offset-deg";
     nameArr[3] = name;
-    v->sim= "//instrumentation/heading-indicator/offset-deg";
-    simMap[name]= v;
+    v3->sim= "/instrumentation/heading-indicator/offset-deg";
+    simMap[name]= v3;
 
+    varStruct *v4 = new varStruct;
     name = "altimeter_indicated-altitude-ft";
     nameArr[4] = name;
-    v->sim= "/instrumentation/altimeter/indicated-altitude-ft";
-    simMap[name]= v;
+    v4->sim= "/instrumentation/altimeter/indicated-altitude-ft";
+    simMap[name]= v4;
 
+    varStruct *v5 = new varStruct;
     name = "altimeter_pressure-alt-ft";
     nameArr[5] = name;
-    v->sim= "/instrumentation/altimeter/pressure-alt-ft";
-    simMap[name]= v;
+    v5->sim= "/instrumentation/altimeter/pressure-alt-ft";
+    simMap[name]= v5;
 
+    varStruct *v6 = new varStruct;
     name = "attitude-indicator_indicated-pitch-deg";
     nameArr[6] = name;
-    v->sim= "/instrumentation/attitude-indicator/indicated-pitch-deg";
-    simMap[name]= v;
+    v6->sim= "/instrumentation/attitude-indicator/indicated-pitch-deg";
+    simMap[name]= v6;
 
+    varStruct *v7 = new varStruct;
     name = "attitude-indicator_indicated-roll-deg";
     nameArr[7] = name;
-    v->sim= "/instrumentation/attitude-indicator/indicated-roll-deg";
-    simMap[name]= v;
+    v7->sim= "/instrumentation/attitude-indicator/indicated-roll-deg";
+    simMap[name]= v7;
 
+    varStruct *v8 = new varStruct;
     name = "attitude-indicator_internal-pitch-deg";
     nameArr[8] = name;
-    v->sim= "/instrumentation/attitude-indicator/internal-pitch-deg";
-    simMap[name]= v;
+    v8->sim= "/instrumentation/attitude-indicator/internal-pitch-deg";
+    simMap[name]= v8;
 
+    varStruct *v9 = new varStruct;
     name = "attitude-indicator_internal-roll-deg";
     nameArr[9] = name;
-    v->sim= "/instrumentation/attitude-indicator/internal-roll-deg";
-    simMap[name]= v;
+    v9->sim= "/instrumentation/attitude-indicator/internal-roll-deg";
+    simMap[name]= v9;
 
+    varStruct *v10 = new varStruct;
     name = "encoder_indicated-altitude-ft";
     nameArr[10] = name;
-    v->sim= "/instrumentation/encoder/indicated-altitude-ft";
-    simMap[name]= v;
+    v10->sim= "/instrumentation/encoder/indicated-altitude-ft";
+    simMap[name]= v10;
 
+    varStruct *v11 = new varStruct;
     name = "encoder_pressure-alt-ft";
     nameArr[11] = name;
-    v->sim= "/instrumentation/encoder/pressure-alt-ft";
-    simMap[name]= v;
+    v11->sim= "/instrumentation/encoder/pressure-alt-ft";
+    simMap[name]= v11;
 
+    varStruct *v12 = new varStruct;
     name = "gps_indicated-altitude-ft";
     nameArr[12] = name;
-    v->sim= "/instrumentation/gps/indicated-altitude-ft";
-    simMap[name]= v;
+    v12->sim= "/instrumentation/gps/indicated-altitude-ft";
+    simMap[name]= v12;
 
+    varStruct *v13 = new varStruct;
     name = "gps_indicated-ground-speed-kt";
     nameArr[13] = name;
-    v->sim= "//instrumentation/gps/indicated-ground-speed-kt";
-    simMap[name]= v;
+    v13->sim= "//instrumentation/gps/indicated-ground-speed-kt";
+    simMap[name]= v13;
 
+    varStruct *v14 = new varStruct;
     name = "gps_indicated-vertical-speed";
     nameArr[14] = name;
-    v->sim= "/instrumentation/gps/indicated-vertical-speed";
-    simMap[name]= v;
+    v14->sim= "/instrumentation/gps/indicated-vertical-speed";
+    simMap[name]= v14;
 
+    varStruct *v15 = new varStruct;
     name = "indicated-heading-deg";
     nameArr[15] = name;
-    v->sim= "/instrumentation/heading-indicator/indicated-heading-deg";
-    simMap[name]= v;
+    v15->sim= "/instrumentation/heading-indicator/indicated-heading-deg";
+    simMap[name]= v15;
 
+    varStruct *v16 = new varStruct;
     name = "magnetic-compass_indicated-heading-deg";
     nameArr[16] = name;
-    v->sim= "/instrumentation/magnetic-compass/indicated-heading-deg";
-    simMap[name]= v;
+    v16->sim= "/instrumentation/magnetic-compass/indicated-heading-deg";
+    simMap[name]= v16;
 
+    varStruct *v17 = new varStruct;
     name = "slip-skid-ball_indicated-slip-skid";
     nameArr[17] = name;
-    v->sim= "/instrumentation/slip-skid-ball/indicated-slip-skid";
-    simMap[name]= v;
+    v17->sim= "/instrumentation/slip-skid-ball/indicated-slip-skid";
+    simMap[name]= v17;
 
+    varStruct *v18 = new varStruct;
     name = "turn-indicator_indicated-turn-rate";
     nameArr[18] = name;
-    v->sim= "/instrumentation/turn-indicator/indicated-turn-rate";
-    simMap[name]= v;
+    v18->sim= "/instrumentation/turn-indicator/indicated-turn-rate";
+    simMap[name]= v18;
 
+    varStruct *v19 = new varStruct;
     name = "vertical-speed-indicator_indicated-speed-fpm";
     nameArr[19] = name;
-    v->sim= "/instrumentation/vertical-speed-indicator/indicated-speed-fpm";
-    simMap[name]= v;
+    v19->sim= "/instrumentation/vertical-speed-indicator/indicated-speed-fpm";
+    simMap[name]= v19;
 
+    varStruct *v20 = new varStruct;
     name = "tflight_aileron";
     nameArr[20] = name;
-    v->sim= "/controls/flight/aileron";
-    simMap[name]= v;
+    v20->sim= "/controls/flight/aileron";
+    simMap[name]= v20;
 
+    varStruct *v21 = new varStruct;
     name = "flight_rudder";
     nameArr[21] = name;
-    v->sim= "/controls/flight/rudder";
-    simMap[name]= v;
+    v21->sim= "/controls/flight/rudder";
+    simMap[name]= v21;
 
+    varStruct *v22 = new varStruct;
     name = "flight_flaps";
     nameArr[22] = name;
-    v->sim= "/controls/flight/flaps";
-    simMap[name]= v;
+    v22->sim= "/controls/flight/flaps";
+    simMap[name]= v22;
 
+    varStruct *v23 = new varStruct;
     name = "engine_throttle";
     nameArr[23] = name;
-    v->sim= "/controls/engines/engine/throttle";
-    simMap[name]= v;
+    v23->sim= "/controls/engines/engine/throttle";
+    simMap[name]= v23;
 
+    varStruct *v24 = new varStruct;
     name = "current-engine_throttle";
     nameArr[24] = name;
-    v->sim= "/controls/engines/current-engine/throttle";
-    simMap[name]= v;
+    v24->sim= "/controls/engines/current-engine/throttle";
+    simMap[name]= v24;
 
+    varStruct *v25 = new varStruct;
     name = "switches_master-avionics";
     nameArr[25] = name;
-    v->sim= "/controls/switches/master-avionics";
-    simMap[name]= v;
+    v25->sim= "/controls/switches/master-avionics";
+    simMap[name]= v25;
 
+    varStruct *v26 = new varStruct;
     name = "switches_starter";
     nameArr[26] = name;
-    v->sim= "/controls/switches/starter";
-    simMap[name]= v;
+    v26->sim= "/controls/switches/starter";
+    simMap[name]= v26;
 
+    varStruct *v27 = new varStruct;
     name = "active-engine_auto-start";
     nameArr[27] = name;
-    v->sim= "/engines/active-engine/auto-start";
-    simMap[name]= v;
+    v27->sim= "/engines/active-engine/auto-start";
+    simMap[name]= v27;
 
     varStruct *v28 = new varStruct;
     name = "flight_speedbrake";

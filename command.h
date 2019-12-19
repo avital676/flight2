@@ -69,9 +69,18 @@ public:
 class loopCommand: public ConditionParser{
 public:
     bool status = false;
-    void checkStatus(int i, vector<string> v, int index);
+    int checkStatus(int i, vector<string> v, int index);
+    int execute(int, vector<string>) override ;
+};
 
-        int execute(int, vector<string>) override ;
+class PrintCommand: public command {
+public:
+    int execute(int, vector<string>) override ;
+};
+
+class SleepCommand: public command {
+public:
+    int execute(int, vector<string>) override ;
 };
 
 #endif //UNTITLED6_COMMAND_H

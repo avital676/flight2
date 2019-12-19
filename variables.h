@@ -34,7 +34,7 @@ public:
     void setVarInMap(string v, varStruct s);
     //varStruct getVar(string v);
     varStruct* searchSim(string s);
-    string nameArr[23];
+    string nameArr[35];
     queue<varStruct> q;
     varStruct getVarFromName(string v);
     varStruct* getVarFromSim(string v);

@@ -21,6 +21,10 @@ parser::parser(vector<string> v) {
     comMap["while"] = c;
     c = new ifCommand;
     comMap["if"] = c;
+    c = new PrintCommand;
+    comMap["Print"] = c;
+    c = new SleepCommand;
+    comMap["Sleep"] = c;
 }
 
 void parser::parse() {
@@ -32,7 +36,6 @@ void parser::parse() {
             c = comMap[token[i]];
             i += c->execute(i, token);
         } else if (m.find(token[i]) != m.end()) {
-            cout<<m.size()<<endl;
             i+=comMap["var"] -> execute(i, token);
 //            varStruct var = variables::getInstance()->getVar(token[i]);
 //            var.value = c->express(token[i + 2]);

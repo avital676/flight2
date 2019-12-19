@@ -74,6 +74,9 @@ public:
                                 word = "";
                             }
                         }
+                        if (word[0]=='"'){
+                            word = sub_last_tub(word, 1, word.length()-1);
+                        }
                         token.push_back(word);
 
                         j = -1;
