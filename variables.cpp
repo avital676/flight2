@@ -52,7 +52,8 @@ void variables::initialize(){
     name = "airspeed-indicator_indicated-speed-kt";
     nameArr[0] = name;
     v->sim= "/instrumentation/airspeed-indicator/indicated-speed-kt";
-    simMap[name]= v;
+    simMap.insert({name,v});
+    //simMap[name]= v;
 
     name = "time_warp";
     nameArr[1] = name;
@@ -189,40 +190,47 @@ void variables::initialize(){
     v->sim= "/engines/active-engine/auto-start";
     simMap[name]= v;
 
+    varStruct *v28 = new varStruct;
     name = "flight_speedbrake";
     nameArr[28] = name;
-    v->sim= "/controls/flight/speedbrake";
-    simMap[name]= v;
+    v28->sim= "/controls/flight/speedbrake";
+    simMap[name]= v28;
 
+    varStruct *v29 = new varStruct;
     name = "c172p_brake-parking";
     nameArr[29] = name;
-    v->sim= "/sim/model/c172p/brake-parking";
-    simMap[name]= v;
+    v29->sim= "/sim/model/c172p/brake-parking";
+    simMap[name]= v29;
 
+    varStruct *v30 = new varStruct;
     name = "engine_primer";
     nameArr[30] = name;
-    v->sim= "/controls/engines/engine/primer";
-    simMap[name]= v;
+    v30->sim= "/controls/engines/engine/primer";
+    simMap[name]= v30;
 
+    varStruct *v31 = new varStruct;
     name = "current-engine_mixture";
     nameArr[31] = name;
-    v->sim= "/controls/engines/current-engine/mixture";
-    simMap[name]= v;
+    v31->sim= "/controls/engines/current-engine/mixture";
+    simMap[name]= v31;
 
+    varStruct *v32 = new varStruct;
     name = "switches_master-bat";
     nameArr[32] = name;
-    v->sim= "/controls/switches/master-bat";
-    simMap[name]= v;
+    v32->sim= "/controls/switches/master-bat";
+    simMap[name]= v32;
 
+    varStruct *v33 = new varStruct;
     name = "switches_master-alt";
     nameArr[33] = name;
-    v->sim= "/controls/switches/master-alt";
-    simMap[name]= v;
+    v33->sim= "/controls/switches/master-alt";
+    simMap[name]= v33;
 
+    varStruct *v34 = new varStruct;
     name = "engine_rpm";
     nameArr[34] = name;
-    v->sim= "/engines/engine/rpm";
-    simMap[name]= v;
+    v34->sim= "/engines/engine/rpm";
+    simMap[name]= v34;
 }
 
 unordered_map<string, varStruct> variables::getNameMap() {
