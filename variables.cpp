@@ -2,8 +2,8 @@
 // Created by avital on 12/12/2019.
 //
 
-#include <iostream>
 #include "variables.h"
+
 variables* variables::instance = 0;
 using namespace std;
 variables::variables() {

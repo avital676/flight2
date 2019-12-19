@@ -46,15 +46,17 @@ public:
     int numOfPar = 2;
     int execute(int, vector<string>) override ;
 };
+
 class ConditionParser: public command{
     command com;
 public:
-    ConditionParser(){}
+    ConditionParser(){};
     ConditionParser(string);
     void setCom(command a);
     int execute(int, vector<string>) override;
 
 };
+
 class ifCommand: public ConditionParser{
 public:
     //int numOfPar = ;
@@ -62,7 +64,7 @@ public:
     ifCommand(){}
     int execute(int, vector<string>) override ;
 
-    };
+};
 
 class loopCommand: public ConditionParser{
 public:

@@ -1,6 +1,7 @@
 //
 // Created by avital on 12/12/2019.
 //
+
 #include <string>
 #include <vector>
 #include "parser.h"
@@ -16,6 +17,10 @@ parser::parser(vector<string> v) {
     comMap["connectControlClient"] = c;
     c = new DefineVarCommand;
     comMap["var"] = c;
+    c = new loopCommand;
+    comMap["while"] = c;
+    c = new ifCommand;
+    comMap["if"] = c;
 }
 
 void parser::parse() {
@@ -37,7 +42,4 @@ void parser::parse() {
         }
     }
 }
-
-
-
 

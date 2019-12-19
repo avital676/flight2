@@ -17,8 +17,8 @@
 #include "Interpreter.h"
 
 
-void openServer(string p, bool &open) {
-    bool work = true;
+void openServer(string p, bool open) {
+    volatile bool work = true;
     server* ser = new server(&work);
     int socketSer = socket(AF_INET, SOCK_STREAM, 0);
     if (socketSer == -1) {
@@ -78,9 +78,9 @@ void clientMng(string port, string ip) {
 
 
 int openServerCommand::execute(int i, vector<string> v) {
-    cout<<"openserver execute"<<endl;
-    bool open = false;
-    thread serverT(openServer, v[i + 1], open);
+    cout << "openserver execute" << endl;
+    volatile bool open = false;
+    //thread serverT(openServer, v[i + 1], open);
     while (!open) {
         sleep(3);
     }
@@ -93,7 +93,7 @@ int ConnectCommand::execute(int i, vector<string> v) {
 }
 
 int DefineVarCommand::execute(int i, vector<string> v) {
-    cout<<"dedine var execute" <<endl;
+    cout << "dedine var execute" << endl;
     varStruct *var = new varStruct;
     string varName;
     if (v[i] == "var") {
@@ -139,7 +139,7 @@ int ConditionParser::execute(int i, vector<string> v ) {
 int ifCommand::execute(int i, vector<string> v) {
     int index;
     //if var  {...}
-    if (v[i+2]=="{"){
+    if (v[i+2] == "{"){
         varStruct v1=variables::getInstance()->getVar(v[i + 1]);
         if (v1.value>0){
             status= true;
@@ -149,14 +149,14 @@ int ifCommand::execute(int i, vector<string> v) {
    double v1= express(v[i+1]);
     double v2= express(v[i+3]);
     //if var == exp  {...}
-    if (v[i+4]=="{"){
+    if (v[i+4] == "{"){
         index=i+5;
-        if (v[i+2]=="=="){
+        if (v[i+2] == "=="){
             if (v1 == v2){
                 status= true;
             }
         }
-        if (v[i+2]==">="){
+        if (v[i+2] == ">="){
             if (v1 >= v2){
                 status= true;
             }
@@ -166,17 +166,17 @@ int ifCommand::execute(int i, vector<string> v) {
                 status= true;
             }
         }
-        if (v[i+2]=="!="){
+        if (v[i+2] == "!="){
             if (v1!=v2){
                 status= true;
             }
         }
-        if (v[i+2]==">"){
+        if (v[i+2] == ">"){
             if (v1>v2){
                 status= true;
             }
         }
-        if (v[i+2]=="<"){
+        if (v[i+2] == "<"){
             if (v1<v2){
                 status= true;
             }
@@ -185,11 +185,11 @@ int ifCommand::execute(int i, vector<string> v) {
     vector<string> newVector;
     //make new vector for parser.
     int countPare=0;
-    while ((v[index]!="}")||(countPare!=0)){
-        if (v[index]=="{") {
+    while ((v[index] != "}")||(countPare!=0)){
+        if (v[index] == "{") {
             countPare++;
         }
-        if (v[index]=="}"){
+        if (v[index] == "}"){
             countPare--;
         }
         newVector.push_back(v[index]);
@@ -201,7 +201,7 @@ int ifCommand::execute(int i, vector<string> v) {
         p->parse();
     }
     //return the next place after }.
-    return index+1;
+    return index + 1;
 
 }
 
@@ -211,11 +211,11 @@ int loopCommand::execute(int i, vector<string> v ) {
     vector<string> newVector;
     int countPare=0;
     //make new vector for parser.
-    while ((v[index]!="}")||(countPare!=0)){
-        if (v[index]=="{") {
+    while ((v[index] != "}")||(countPare!=0)){
+        if (v[index] == "{") {
             countPare++;
         }
-        if (v[index]=="}"){
+        if (v[index] == "}"){
             countPare--;
         }
         newVector.push_back(v[index]);
@@ -223,18 +223,18 @@ int loopCommand::execute(int i, vector<string> v ) {
     }
 
     while (status){
-        //do the condition in loop
+        // do the condition in loop
         parser *p = new parser(newVector);
         p->parse();
         checkStatus(i, v, index);
     }
-    //return the next place after }.
+    // return the next place after }.
     return index+1;
 
 }
 
 void loopCommand::checkStatus(int i, vector<string> v, int index){
-    //while break{...}
+    // while break{...}
     if (v[i+2]=="{"){
         double v1 = express(v[i+1]);
         if (v1>0){
@@ -245,34 +245,34 @@ void loopCommand::checkStatus(int i, vector<string> v, int index){
     double v1= express(v[i+1]);
     double v2= express(v[i+3]);
     //while breaks == exp{...}
-    if (v[i+4]=="{"){
+    if (v[i+4] == "{"){
         index=i+5;
-        if (v[i+2]=="=="){
-            if (v1== v2){
+        if (v[i+2] == "=="){
+            if (v1 == v2){
                 status= true;
             }
         }
-        if (v[i+2]==">="){
+        if (v[i+2] == ">="){
             if (v1 >= v2){
                 status= true;
             }
         }
-        if (v[i+2]=="<="){
+        if (v[i+2] == "<="){
             if (v1<= v2){
                 status= true;
             }
         }
-        if (v[i+2]=="!="){
+        if (v[i+2] == "!="){
             if (v1!=v2){
                 status= true;
             }
         }
-        if (v[i+2]==">"){
+        if (v[i+2] == ">"){
             if (v1 >v2){
                 status= true;
             }
         }
-        if (v[i+2]=="<"){
+        if (v[i+2] == "<"){
             if (v1 <v2 ){
                 status= true;
             }

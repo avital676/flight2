@@ -19,7 +19,6 @@ server::server(bool do_work) {
 void server::dataToMap(string data) {
     map<string, varStruct> m = variables::getInstance()->getNameMap();
     string s = "";
-    int simIndex = 0;
     int i;
     for (i = 0; i < data.size(); i++) {
         if (data[i] != ',') {
