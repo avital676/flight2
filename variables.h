@@ -33,7 +33,7 @@ public:
     void setVarInMap(string v, varStruct s);
     varStruct getVar(string v);
     varStruct* searchSim(string s);
-    string simArr[23];
+    string nameArr[23];
 };
 
 #endif //FLIGHT1_VARIABLES_H
