@@ -18,7 +18,7 @@ private:
 public:
     server(){};
     server(bool work);
-    void dataToMap(string data);
+    void dataToMap(char* data);
     //void setSock(int socketfd, sockaddr_in address);
     //void readFromSimu();
 };
