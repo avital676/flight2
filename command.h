@@ -33,7 +33,7 @@ public:
     int execute(int, vector<string>) override ;
 };
 
-void clientMng(string port, string ip);
+int clientMng(string port, string ip);
 
 class ConnectCommand : public command{
 public:

@@ -9,11 +9,9 @@ using namespace std;
 
 
 
-
 server::server(bool do_work) {
     work = do_work;
 }
-
 
 
 void server::dataToMap(string data) {
@@ -30,5 +28,6 @@ void server::dataToMap(string data) {
         }
     }
 }
+
 
 

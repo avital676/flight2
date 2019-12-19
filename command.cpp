@@ -10,14 +10,13 @@
 #include <thread>
 #include <string>
 #include "command.h"
-#include "client.h"
 #include "variables.h"
 #include "server.h"
 #include "parser.h"
 #include "Interpreter.h"
 
 
-int openSer(int port, bool open) {
+int openSer(int port, bool is_open) {
     server ser = new server();
     //create socket
     int socketfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -42,7 +41,7 @@ int openSer(int port, bool open) {
     } else{
         std::cout<<"Server is now listening ..."<<std::endl;
     }
-    open = true;
+    is_open = true;
     // accepting a client
     int client_socket = accept(socketfd, (struct sockaddr *)&address,
                                (socklen_t*)&address);
@@ -65,11 +64,11 @@ int openSer(int port, bool open) {
     return 0;
 }
 
-void clientMng(string port, string ip) {
+int clientMng(string port, string ip) {
     int client_socket = socket(AF_INET, SOCK_STREAM, 0);
     if (client_socket == -1) {
         cerr << "Could not create a socket" << endl;
-        exit(1);
+        return -1;
     }
     sockaddr_in address;
     address.sin_family = AF_INET;
@@ -80,19 +79,22 @@ void clientMng(string port, string ip) {
     int is_connect = connect(client_socket, (struct sockaddr*) &address, sizeof(address));
     if (is_connect == -1) {
         cerr << "Could not connect to host server" << endl;
-        exit(1);
+        return -2;
     } else {
         // client is connected
+        cout<< "connected"<< endl;
     }
+    return 0;
 }
 
 
 int openServerCommand::execute(int i, vector<string> v) {
     cout << "openserver execute" << endl;
-    volatile bool open = false;
-    int port = stoi(v[i + 1], open);
-    thread serverT(openSer, port);
-    while (!open) {
+    volatile bool is_open = false;
+    int port = stoi(v[i + 1]);
+    thread serverT(openSer, port, &is_open);
+    serverT.join();
+    while (!is_open) {
         sleep(3);
     }
     return numOfPar + 1;
