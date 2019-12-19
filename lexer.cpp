@@ -67,9 +67,9 @@ public:
                         word=sub_last_tub(linesVector[i], j+1, linesVector[i].length()-1);
                         for (int t = 0; t < word.length(); t++) {
                             if (word[t] == ',') {
-                                string subWord = word.substr(0, t);
+                                string subWord =sub_last_tub(word,1,t-1);
                                 token.push_back(subWord);
-                                subWord = word.substr(t + 1, word.length());
+                                subWord = sub_last_tub(word,t + 1, word.length());
                                 token.push_back(subWord);
                                 word = "";
                             }
