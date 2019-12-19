@@ -42,6 +42,7 @@ int openSer(int port, bool is_open) {
     } else{
         std::cout<<"Server is now listening ..."<<std::endl;
     }
+    cout << port << endl;
     is_open = true;
     // accepting a client
     int client_socket = accept(socketfd, (struct sockaddr *)&address,
@@ -58,8 +59,9 @@ int openSer(int port, bool is_open) {
     char buffer[1024] = {0};
     int valread;
     while (true) {
+        cout << "reading" << endl;
         valread = read( client_socket , buffer, 1024);
-        cout<<buffer<<endl;
+        cout << buffer << endl;
         ser.dataToMap(buffer);
 
     }
@@ -85,20 +87,20 @@ int clientMng(string port, string ip) {
     } else { // client is connected
         int is_sent;
         while(true) {
-            stack<varStruct> stk = variables::getInstance()->stk;
+            queue<varStruct> q = variables::getInstance()->q;
             char strV[]="";
-            if(stk.empty()) {
+            if(q.empty()) {
                 sleep(0.1);
             } else {
-                while (!stk.empty()) {
-                    string s = "set " + stk.top().sim + " " + to_string(stk.top().value);
+                while (!q.empty()) {
+                    string s = "set " + q.front().sim + " " + to_string(q.front().value);
                     char strToSend[s.length()+1];
                     strcpy(strToSend, s.c_str());
                     is_sent = send(client_socket, strToSend, strlen(strV), 0);
                     if (is_sent == -1) {
                         cerr << "error sending message" << endl;
                     }
-                    stk.pop();
+                    q.pop();
                 }
             }
         }
@@ -113,9 +115,10 @@ int openServerCommand::execute(int i, vector<string> v) {
     int port = stoi(v[i + 1]);
     thread serverT(openSer, port, &is_open);
     serverT.join();
-    while (!is_open) {
-        sleep(3);
-    }
+    //sleep(5);
+//    while (!is_open) {
+//        sleep(3);
+//    }
     return numOfPar + 1;
 }
 
@@ -146,7 +149,7 @@ int DefineVarCommand::execute(int i, vector<string> v) {
         var->value = express(v[i + 2]);
         variables::getInstance()->setVarInMap(varName, *var);
     }
-    variables::getInstance()->stk.push(*var);
+    variables::getInstance()->q.push(*var);
     return numOfPar + 1;
 }
 

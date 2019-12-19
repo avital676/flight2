@@ -8,7 +8,7 @@
 #include <string>
 #include <unordered_map>
 #include <mutex>
-#include <stack>
+#include <queue>
 
 using namespace std;
 
@@ -35,7 +35,7 @@ public:
     varStruct getVar(string v);
     varStruct* searchSim(string s);
     string nameArr[23];
-    stack<varStruct> stk;
+    queue<varStruct> q;
 };
 
 #endif //FLIGHT1_VARIABLES_H
