@@ -8,7 +8,7 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <thread>
-#include "string"
+#include <string>
 #include "command.h"
 #include "client.h"
 #include "variables.h"
@@ -17,42 +17,52 @@
 #include "Interpreter.h"
 
 
-void openServer(string p, bool open) {
-    volatile bool work = true;
-    server* ser = new server(&work);
-    int socketSer = socket(AF_INET, SOCK_STREAM, 0);
-    if (socketSer == -1) {
-        cerr << "Could not create socket" << endl;
-        exit(1);
+int openSer(int port, bool open) {
+    server ser = new server();
+    //create socket
+    int socketfd = socket(AF_INET, SOCK_STREAM, 0);
+    if (socketfd == -1) {
+        //error
+        std::cerr << "Could not create a socket"<<std::endl;
+        return -1;
     }
-    sockaddr_in address;
+    sockaddr_in address; //in means IP4
     address.sin_family = AF_INET;
     address.sin_addr.s_addr = INADDR_ANY;
-    address.sin_port= htons(stoi(p));
-    if (bind(socketSer, (struct sockaddr *) &address, sizeof(address)) == -1) {
-        cerr << "Could not bind the socket to an IP" << endl;
-        exit(1);
+    address.sin_port = htons(port);
+
+    if (bind(socketfd, (struct sockaddr *) &address, sizeof(address)) == -1) {
+        std::cerr<<"Could not bind the socket to an IP"<<std::endl;
+        return -2;
     }
-    if (listen(socketSer, 5) == -1) {
-        cerr << "Error during listening command" << endl;
-        exit(1);
+
+    if (listen(socketfd, 5) == -1) {
+        std::cerr<<"Error during listening command"<<std::endl;
+        return -3;
+    } else{
+        std::cout<<"Server is now listening ..."<<std::endl;
     }
     open = true;
-    // accept a client:
-    int client_socket = accept(socketSer, (struct sockaddr *) &address,
-                               (socklen_t*) &address);
+    // accepting a client
+    int client_socket = accept(socketfd, (struct sockaddr *)&address,
+                               (socklen_t*)&address);
+
     if (client_socket == -1) {
-        cerr << "Error accepting client" << endl;
-        exit(1);
+        std::cerr<<"Error accepting client"<<std::endl;
+        return -4;
     }
-    // read from client:
+
+    close(socketfd);
+
+    //reading from client
     char buffer[1024] = {0};
-    int valRead;
-    while (work) {
-        valRead = read(client_socket, buffer, 1024);
-        // insert values to map:
-        ser->dataToMap(buffer);
+    int valread;
+    while (true) {
+        valread = read( client_socket , buffer, 1024);
+        ser.dataToMap(buffer);
+
     }
+    return 0;
 }
 
 void clientMng(string port, string ip) {
@@ -80,7 +90,8 @@ void clientMng(string port, string ip) {
 int openServerCommand::execute(int i, vector<string> v) {
     cout << "openserver execute" << endl;
     volatile bool open = false;
-    //thread serverT(openServer, v[i + 1], open);
+    int port = stoi(v[i + 1], open);
+    thread serverT(openSer, port);
     while (!open) {
         sleep(3);
     }

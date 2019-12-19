@@ -16,6 +16,7 @@ private:
      string port;
 
 public:
+    server(){};
     server(bool work);
     void dataToMap(string data);
 
