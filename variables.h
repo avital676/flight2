@@ -6,7 +6,7 @@
 #define FLIGHT1_VARIABLES_H
 
 #include <string>
-#include <map>
+#include <unordered_map>
 #include <mutex>
 
 using namespace std;
@@ -21,18 +21,19 @@ class variables {
 private:
     variables();
     static variables *instance;
-    map<string, varStruct> nameMap;
-    map<string, varStruct*> simMap;
+    unordered_map<string, varStruct> nameMap;
+    unordered_map<string, varStruct*> simMap;
     mutex mutex_lock;
     void initialize();
 
 public:
     static variables *getInstance();
-    map<string, varStruct *> getSimMap();
-    map<string, varStruct> getNameMap();
+    unordered_map<string, varStruct *> getSimMap();
+    unordered_map<string, varStruct> getNameMap();
     void setVarInMap(string v, varStruct s);
     varStruct getVar(string v);
     varStruct* searchSim(string s);
+    string simArr[23];
 };
 
 #endif //FLIGHT1_VARIABLES_H

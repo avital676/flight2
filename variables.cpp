@@ -16,7 +16,7 @@ variables* variables::getInstance() {
     return instance;
 }
 
-map<string, varStruct*> variables::getSimMap() {
+unordered_map<string, varStruct*> variables::getSimMap() {
     return simMap;
 }
 
@@ -43,8 +43,11 @@ varStruct variables::getVar(string v) {
 
 void variables::initialize(){
     varStruct *v = new varStruct;
+    string name;
+    name = "airspeed-indicator_indicated-speed-kt";
+    simArr[0] = name;
     v->sim= "/instrumentation/airspeed-indicator/indicated-speed-kt";
-    simMap["airspeed-indicator_indicated-speed-kt"]= v;
+    simMap[name]= v;
 
     v->sim= "/instrumentation/altimeter/indicated-altitude-ft";
     simMap["altimeter_indicated-altitude-ft"]= v;
@@ -113,13 +116,13 @@ void variables::initialize(){
     simMap["engine_rpm"]= v;
 }
 
-map<string, varStruct> variables::getNameMap() {
+unordered_map<string, varStruct> variables::getNameMap() {
     return nameMap;
 }
 
 varStruct* variables::searchSim(string s) {
-    map<string, varStruct*> m = variables::getInstance()->getSimMap();
-    map<string, varStruct*>::iterator it;
+    unordered_map<string, varStruct*> m = variables::getInstance()->getSimMap();
+    unordered_map<string, varStruct*>::iterator it;
     for ( it = m.begin(); it != m.end(); it++ ) {
         if (it->second->sim == s) {
             // return pointer to the valStruct that has this sim:
