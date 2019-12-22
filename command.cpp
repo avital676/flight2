@@ -41,8 +41,8 @@ void sendToSimu(int client_socket) {
             sleep(0.1);
         } else {
             while (!q.empty()) {
-                string s = "set " + q.front().sim.substr(1,-1) + " " + to_string(q.front().value);
-                cout << s << endl;
+                string s = "set " + q.front().sim.substr(1,-1) + " " + to_string(q.front().value) + "\r\n";
+                //cout << s << endl;
                 char strToSend[s.length()+1];
                 strcpy(strToSend, s.c_str());
                 is_sent = send(client_socket, strToSend, strlen(strV), 0);
@@ -97,46 +97,6 @@ int openSer(int port) {
     return 0;
 }
 
-//int clientMng(string port, string ip) {
-//    int client_socket = socket(AF_INET, SOCK_STREAM, 0);
-//    if (client_socket == -1) {
-//        cerr << "Could not create a socket" << endl;
-//        return -1;
-//    }
-//    sockaddr_in address;
-//    address.sin_family = AF_INET;
-//    const char* ipConst = ip.c_str();
-//    address.sin_addr.s_addr = inet_addr(ipConst);
-//    address.sin_port = htons(stoi(port));
-//    // request connection with server:
-//    int is_connect = connect(client_socket, (struct sockaddr*) &address, sizeof(address));
-//    if (is_connect == -1) {
-//        cerr << "Could not connect to host server" << endl;
-//        return -2;
-//    } else { // client is connected
-//        int is_sent;
-//        while(true) {
-//            queue<varStruct> q = variables::getInstance()->q;
-//            char strV[]="";
-//            if(q.empty()) {
-//                sleep(0.1);
-//            } else {
-//                while (!q.empty()) {
-//                    string s = "set " + q.front().sim + " " + to_string(q.front().value);
-//                    char strToSend[s.length()+1];
-//                    strcpy(strToSend, s.c_str());
-//                    is_sent = send(client_socket, strToSend, strlen(strV), 0);
-//                    if (is_sent == -1) {
-//                        cerr << "error sending message" << endl;
-//                    }
-//                    q.pop();
-//                }
-//            }
-//        }
-//    }
-//    return 0;
-//}
-
 
 int openCli(int port, string ip) {
     int client_socket = socket(AF_INET, SOCK_STREAM, 0);
@@ -180,33 +140,37 @@ int ConnectCommand::execute(int i, vector<string> v) {
 }
 
 int DefineVarCommand::execute(int i, vector<string> v) {
-    cout << "define var execute" << endl;
+    //cout << "define var execute" << endl;
     varStruct* var = new varStruct;
     string varName;
+    // define new var:
     if (v[i] == "var") {
         varName = v[i + 1];
         if (v[i + 2] == "->") {
             var->sim = v[i + 4];
+            var->set = true;
             numOfPar = 4;
         } else if (v[i + 2] == "<-") {
             // search sim in simMap:
             string sim = v[i + 4];
+            var->set = false;
             var = variables::getInstance()->searchSim(sim);
             numOfPar = 4;
         } else if (v[i + 2] == "=") {
             var->value = express(v[i + 3]);
             numOfPar = 3;
         }
-
-        variables::getInstance()->setVarInMap(varName, *var);
-    } else {
+        variables::getInstance()->setVarInNameMap(varName, *var);
+    } else { // var already defined:
         varName = v[i];
         *var = variables::getInstance()->getVarFromName(v[i]);
         var->value = express(v[i + 2]);
-        variables::getInstance()->setVarInMap(varName, *var);
+        variables::getInstance()->setVarInNameMap(varName, *var);
         numOfPar = 2;
     }
-    variables::getInstance()->q.push(*var);
+    if (var->set) {
+        variables::getInstance()->q.push(*var);
+    }
     return numOfPar + 1;
 }
 

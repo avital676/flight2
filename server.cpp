@@ -22,35 +22,43 @@ void server::dataToMap(char* data) {
     string s = "";
     int i;
     int counter = 0;
-    string name;
+    string sim_name;
     size_t index1 = string(data).find("\n");
     string word1=string(data);
-    string word2=word1.substr(index1,word1.length());
+    string word2=word1.substr(index1 + 1,word1.length());
     size_t index2=word2.find("\n");
     //only one \n
-    if (index2==string::npos){
+    if (word2 == ""){
         word1=word1.substr(0,index1);
     }
     else{
-        word1=word1.substr(index1+1, index2);
+        word1=word2.substr(0, index2);
     }
     ////// CHECK /n take only between 2 \n!!!!!!!!!!
-    for (i = 0; i < strlen(data); i++) {
+    cout<<word1<<endl;
+    for (i = 0; i < word1.size(); i++) {
         if (data[i] != ',') {
-            s += data[i];
+            s += word1[i];
         } else {
-            if(counter<35) {
-                name = variables::getInstance()->nameArr[counter];
-                //cout << variables::getInstance()->getVarFromSim(name)->sim << endl;
-                varStruct *v = variables::getInstance()->getVarFromSim(name);
-                v->value = atof(s.c_str());
-                variables::getInstance()->setVarInMap(name, *v);
-                counter++;
-                s = "";
-            }
+            // if(counter<=35) {
+            cout << s << endl;
+            sim_name = variables::getInstance()->nameArr[counter];
+            //cout << variables::getInstance()->getVarFromSim(name)->sim << endl;
+            varStruct *v = variables::getInstance()->getVarFromSim(sim_name);
+            v->value = stof(s.c_str());
+            variables::getInstance()->setVarInSimMap(sim_name, *v);
+            counter++;
+            //cout << s <<endl;
+            s = "";
+            // }
         }
     }
+    sim_name = variables::getInstance()->nameArr[counter];
+    varStruct *v = variables::getInstance()->getVarFromSim(sim_name);
+    v->value = stof(s.c_str());
+    variables::getInstance()->setVarInSimMap(sim_name, *v);
 }
+
 
 
 
