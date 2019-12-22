@@ -17,7 +17,7 @@ server::server(bool do_work) {
 
 
 void server::dataToMap(char* data) {
-    unordered_map<string, varStruct> nameMap = variables::getInstance()->getNameMap();
+    unordered_map<string, varStruct*> nameMap = variables::getInstance()->getNameMap();
     unordered_map<string, varStruct*> simMap = variables::getInstance()->getSimMap();
     string s = "";
     int i;
@@ -35,28 +35,36 @@ void server::dataToMap(char* data) {
         word1=word2.substr(0, index2);
     }
     ////// CHECK /n take only between 2 \n!!!!!!!!!!
-    cout<<word1<<endl;
+    //cout<<word1<<endl;
     for (i = 0; i < word1.size(); i++) {
         if (data[i] != ',') {
             s += word1[i];
         } else {
             // if(counter<=35) {
-            cout << s << endl;
+            //cout << s << endl;
             sim_name = variables::getInstance()->nameArr[counter];
+            //cout << sim_name << endl;
             //cout << variables::getInstance()->getVarFromSim(name)->sim << endl;
             varStruct *v = variables::getInstance()->getVarFromSim(sim_name);
+           // cout << v->value << endl;
             v->value = stof(s.c_str());
-            variables::getInstance()->setVarInSimMap(sim_name, *v);
+            variables::getInstance()->setVarInSimMap(sim_name, v);
+           // cout << variables::getInstance()->getVarFromSim(sim_name)->value<<endl;
             counter++;
             //cout << s <<endl;
             s = "";
             // }
         }
     }
-    sim_name = variables::getInstance()->nameArr[counter];
-    varStruct *v = variables::getInstance()->getVarFromSim(sim_name);
-    v->value = stof(s.c_str());
-    variables::getInstance()->setVarInSimMap(sim_name, *v);
+    if (s!="") {
+        cout << s << endl;
+        sim_name = variables::getInstance()->nameArr[counter];
+        varStruct *v = variables::getInstance()->getVarFromSim(sim_name);
+        cout << v->value << endl;
+        v->value = stof(s.c_str());
+        variables::getInstance()->setVarInSimMap(sim_name, v);
+        s = "";
+    }
 }
 
 

@@ -23,7 +23,7 @@ class variables {
 private:
     variables();
     static variables *instance;
-    unordered_map<string, varStruct> nameMap;
+    unordered_map<string, varStruct*> nameMap;
     unordered_map<string, varStruct*> simMap;
     mutex mutex_lock;
     void initialize();
@@ -31,14 +31,14 @@ private:
 public:
     static variables *getInstance();
     unordered_map<string, varStruct*> getSimMap();
-    unordered_map<string, varStruct> getNameMap();
-    void setVarInNameMap(string v, varStruct s);
-    void setVarInSimMap(string v, varStruct s);
+    unordered_map<string, varStruct*> getNameMap();
+    void setVarInNameMap(string v, varStruct* s);
+    void setVarInSimMap(string v, varStruct* s);
     //varStruct getVar(string v);
     varStruct* searchSim(string s);
     string nameArr[36];
     queue<varStruct> q;
-    varStruct getVarFromName(string v);
+    varStruct* getVarFromName(string v);
     varStruct* getVarFromSim(string v);
 
 };

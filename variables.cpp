@@ -23,7 +23,7 @@ unordered_map<string, varStruct*> variables::getSimMap() {
 }
 
 
-void variables::setVarInNameMap(string v, varStruct s) {
+void variables::setVarInNameMap(string v, varStruct* s) {
     mutex_lock.lock();
     nameMap[v] = s;
 //        if (s == "->") {
@@ -38,13 +38,13 @@ void variables::setVarInNameMap(string v, varStruct s) {
     mutex_lock.unlock();
 }
 
-void variables::setVarInSimMap(string v, varStruct s) {
+void variables::setVarInSimMap(string v, varStruct* s) {
     mutex_lock.lock();
-    simMap[v] = &s;
+    simMap[v] = s;
     mutex_lock.unlock();
 }
 
-varStruct variables::getVarFromName(string v) {
+varStruct* variables::getVarFromName(string v) {
     return nameMap[v];
 }
 
@@ -274,7 +274,7 @@ void variables::initialize(){
     simMap[name]= v35;
 }
 
-unordered_map<string, varStruct> variables::getNameMap() {
+unordered_map<string, varStruct*> variables::getNameMap() {
     return nameMap;
 }
 
