@@ -9,33 +9,37 @@
 #include <unordered_map>
 #include <mutex>
 #include <queue>
-#include "varObj.h"
 
 using namespace std;
 
+struct varStruct {
+    float value;
+    string sim;
+    bool set;
+};
 
 class variables {
 
 private:
     variables();
     static variables *instance;
-    unordered_map<string, varObj> nameMap;
-    unordered_map<string, varObj*> simMap;
+    unordered_map<string, varStruct> nameMap;
+    unordered_map<string, varStruct*> simMap;
     mutex mutex_lock;
     void initialize();
 
 public:
     static variables *getInstance();
-    unordered_map<string, varObj*> getSimMap();
-    unordered_map<string, varObj> getNameMap();
-    void setVarInNameMap(string v, varObj* s);
-    void setVarInSimMap(string v, varObj* s);
+    unordered_map<string, varStruct*> getSimMap();
+    unordered_map<string, varStruct> getNameMap();
+    void setVarInNameMap(string v, varStruct s);
+    void setVarInSimMap(string v, varStruct* s);
     //varStruct getVar(string v);
-    varObj* searchSim(string s);
+    varStruct* searchSim(string s);
     string nameArr[36];
-    queue<varObj*> q;
-    varObj getVarFromName(string v);
-    varObj* getVarFromSim(string v);
+    queue<varStruct> q;
+    varStruct getVarFromName(string v);
+    varStruct* getVarFromSim(string v);
 
 };
 
