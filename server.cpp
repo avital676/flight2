@@ -6,6 +6,7 @@
 #include "variables.h"
 #include <string.h>
 #include <iostream>
+#include "varObj.h"
 
 using namespace std;
 
@@ -17,8 +18,8 @@ server::server(bool do_work) {
 
 
 void server::dataToMap(char* data) {
-    unordered_map<string, varStruct*> nameMap = variables::getInstance()->getNameMap();
-    unordered_map<string, varStruct*> simMap = variables::getInstance()->getSimMap();
+    unordered_map<string, varObj> nameMap = variables::getInstance()->getNameMap();
+    unordered_map<string, varObj*> simMap = variables::getInstance()->getSimMap();
     string s = "";
     int i;
     int counter = 0;
@@ -45,9 +46,9 @@ void server::dataToMap(char* data) {
             sim_name = variables::getInstance()->nameArr[counter];
             //cout << sim_name << endl;
             //cout << variables::getInstance()->getVarFromSim(name)->sim << endl;
-            varStruct *v = variables::getInstance()->getVarFromSim(sim_name);
+            varObj *v = variables::getInstance()->getVarFromSim(sim_name);
            // cout << v->value << endl;
-            v->value = stof(s.c_str());
+            v->setValue(stof(s.c_str()));
             variables::getInstance()->setVarInSimMap(sim_name, v);
            // cout << variables::getInstance()->getVarFromSim(sim_name)->value<<endl;
             counter++;
@@ -59,9 +60,9 @@ void server::dataToMap(char* data) {
     if (s!="") {
         cout << s << endl;
         sim_name = variables::getInstance()->nameArr[counter];
-        varStruct *v = variables::getInstance()->getVarFromSim(sim_name);
-        cout << v->value << endl;
-        v->value = stof(s.c_str());
+        varObj *v = variables::getInstance()->getVarFromSim(sim_name);
+        cout << v->getValue() << endl;
+        v->setValue(stof(s.c_str()));
         variables::getInstance()->setVarInSimMap(sim_name, v);
         s = "";
     }

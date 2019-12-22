@@ -7,6 +7,7 @@
 #include "parser.h"
 #include "variables.h"
 #include <iostream>
+#include "varObj.h"
 using namespace std;
 
 parser::parser(vector<string> v) {
@@ -31,7 +32,7 @@ void parser::parse() {
     int i = 0;
     command* c;
     while (i < token.size()) {
-        unordered_map<string, varStruct*> m =variables::getInstance()->getNameMap();
+        unordered_map<string, varObj> m =variables::getInstance()->getNameMap();
         if (comMap.find(token[i]) != comMap.end()) {
             c = comMap[token[i]];
             i += c->execute(i, token);

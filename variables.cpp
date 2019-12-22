@@ -25,7 +25,7 @@ unordered_map<string, varObj*> variables::getSimMap() {
 
 void variables::setVarInNameMap(string v, varObj* s) {
     mutex_lock.lock();
-    nameMap[v] = s;
+    nameMap[v] = *s;
 //        if (s == "->") {
 //            vMap[v].right = true;
 //        } else if (s == "<-") {
@@ -44,7 +44,7 @@ void variables::setVarInSimMap(string v, varObj* s) {
     mutex_lock.unlock();
 }
 
-varObj* variables::getVarFromName(string v) {
+varObj variables::getVarFromName(string v) {
     return nameMap[v];
 }
 
@@ -273,7 +273,7 @@ void variables::initialize(){
     simMap[name]= v35;
 }
 
-unordered_map<string, varObj*> variables::getNameMap() {
+unordered_map<string, varObj> variables::getNameMap() {
     return nameMap;
 }
 
