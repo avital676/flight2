@@ -16,6 +16,7 @@
 #include "parser.h"
 #include "Interpreter.h"
 #include "keepThreads.h"
+#include "varObj.cpp"
 
 void acceptFromSimu(int client_socket) {
     cout << "waiting to read from simu" << endl;
@@ -35,7 +36,7 @@ void acceptFromSimu(int client_socket) {
 void sendToSimu(int client_socket) {
     int is_sent;
     while(keepThreads::getInstance()->is_open) {
-        queue<varStruct> q = variables::getInstance()->q;
+        queue<varObj> q = variables::getInstance()->q;
         char strV[]="";
         if(q.empty()) {
             sleep(0.1);
@@ -141,7 +142,7 @@ int ConnectCommand::execute(int i, vector<string> v) {
 
 int DefineVarCommand::execute(int i, vector<string> v) {
     //cout << "define var execute" << endl;
-    varStruct* var = new varStruct;
+    varObj* var;
     string varName="";
     // define new var:
     if (v[i] == "var") {

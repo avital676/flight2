@@ -12,11 +12,11 @@
 
 using namespace std;
 
-struct varStruct {
-    float value;
-    string sim;
-    bool set;
-};
+//struct varStruct {
+//    float value;
+//    string sim;
+//    bool set;
+//};
 
 class variables {
 

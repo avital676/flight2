@@ -6,10 +6,11 @@
 using namespace std;
 
 class varObj {
-public:
+private:
     float value;
     string sim;
     bool set;
+public:
     varObj(){};
     void setValue (float v) {
         value = v;
@@ -20,5 +21,13 @@ public:
     void setF (bool f) {
         set = f;
     }
-
+    float getValue () {
+        return value;
+    }
+    string getSim () {
+        return sim;
+    }
+    bool getF () {
+        return set;
+    }
 };
