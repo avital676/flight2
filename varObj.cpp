@@ -10,4 +10,15 @@ public:
     float value;
     string sim;
     bool set;
+    varObj(){};
+    void setValue (float v) {
+        value = v;
+    }
+    void setSim (string s) {
+        sim = s;
+    }
+    void setF (bool f) {
+        set = f;
+    }
+
 };
