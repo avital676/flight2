@@ -15,7 +15,7 @@ server::server(bool do_work) {
     work = do_work;
 }
 void server::dataToMap(char* data) {
-    unordered_map<string, varObj> nameMap = variables::getInstance()->getNameMap();
+    unordered_map<string, varObj*> *nameMap = variables::getInstance()->getNameMap();
     unordered_map<string, varObj*> simMap = variables::getInstance()->getSimMap();
     string s = "";
     int i;
@@ -32,18 +32,21 @@ void server::dataToMap(char* data) {
     else{
         word1=word2.substr(0, index2);
     }
-
+   // cout << "starting for loop in dataToMap" << endl;
     for (i = 0; i < word1.size(); i++) {
         if (data[i] != ',') {
             s += word1[i];
         } else {
+         //   cout << "setting s" << endl;
             sim_name = variables::getInstance()->nameArr[counter];
-            varObj v = variables::getInstance()->getVarFromSim(sim_name);
+            varObj &v = variables::getInstance()->getVarFromSim(sim_name);
+           // cout << "got var from simMap" << endl;
             //cout << v.getVal() << endl;
             v.setVal(atof(s.c_str()));
-            variables::getInstance()->setVarInSimMap(sim_name, &v);
-            cout << variables::getInstance()->getVarFromSim(sim_name).getVal() << endl;
-            cout << variables::getInstance()->getVarFromSim(sim_name).getSim() << endl;
+            variables::getInstance()->setVarInSimMap(sim_name, v);
+          //  cout << "set var in sim map" << endl;
+           // cout << variables::getInstance()->getVarFromSim(sim_name).getVal() << endl;
+           // cout << variables::getInstance()->getVarFromSim(sim_name).getSim() << endl;
             counter++;
             s = "";
 
@@ -57,8 +60,8 @@ void server::dataToMap(char* data) {
         //cout << v->getSim() << endl;
         //cout << v->getVal() << endl;
         v.setVal(atof(s.c_str()));
-        variables::getInstance()->setVarInSimMap(sim_name, &v);
-        cout << variables::getInstance()->getVarFromSim(sim_name).getVal() << endl;
+        variables::getInstance()->setVarInSimMap(sim_name, v);
+    //    cout << variables::getInstance()->getVarFromSim(sim_name).getVal() << endl;
         s = "";
 
     }

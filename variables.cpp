@@ -22,20 +22,20 @@ unordered_map<string, varObj*> variables::getSimMap() {
     return simMap;
 }
 
-void variables::setVarInNameMap(string v, varObj s) {
+void variables::setVarInNameMap(string v, varObj& s) {
     mutex_lock.lock();
-    nameMap[v] = s;
+    nameMap[v] = &s;
     mutex_lock.unlock();
 }
 
-void variables::setVarInSimMap(string v, varObj* s) {
+void variables::setVarInSimMap(string v, varObj& s) {
     mutex_lock.lock();
-    simMap[v] = s;
+    simMap[v] = &s;
     mutex_lock.unlock();
 }
 
-varObj variables::getVarFromName(string v) {
-    return nameMap[v];
+varObj& variables::getVarFromName(string v) {
+    return *nameMap[v];
 }
 
 varObj& variables::getVarFromSim(string v) {
@@ -48,8 +48,7 @@ void variables::initialize() {
     name = "airspeed-indicator_indicated-speed-kt";
     nameArr[0] = name;
     v0->setSim("/instrumentation/airspeed-indicator/indicated-speed-kt");
-    simMap.insert({name, v0});
-    //simMap[name]= v;
+    simMap[name] = v0;
 
     varObj *v1 = new varObj;
     name = "time_warp";
@@ -127,7 +126,7 @@ void variables::initialize() {
     varObj *v13 = new varObj;
     name = "gps_indicated-ground-speed-kt";
     nameArr[13] = name;
-    v13->setSim("//instrumentation/gps/indicated-ground-speed-kt");
+    v13->setSim("/instrumentation/gps/indicated-ground-speed-kt");
     simMap[name] = v13;
 
     varObj *v14 = new varObj;
@@ -263,20 +262,20 @@ void variables::initialize() {
     simMap[name] = v35;
 }
 
-unordered_map<string, varObj> variables::getNameMap() {
-    return nameMap;
+unordered_map<string, varObj*>* variables::getNameMap() {
+    return &nameMap;
 }
 
-varObj& variables::searchSim(string s) {
+varObj* variables::searchSim(string s) {
     unordered_map<string, varObj*> m = variables::getInstance()->getSimMap();
     unordered_map<string, varObj*>::iterator it;
     for ( it = m.begin(); it != m.end(); it++ ) {
         if (it->second->getSim() == s) {
             // return pointer to the valStruct that has this sim:
-            return *it->second;
+            return it->second;
         }
     }
-//    return nullptr;
+   // return ;
 }
 
 

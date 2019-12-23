@@ -1,9 +1,11 @@
 #include <iostream>
 #include "lexer.cpp"
 #include "parser.h"
+#include "variables.h"
 #include "keepThreads.h"
 
 int main() {
+    variables::getInstance();
     std::cout << "Hello, World!" << std::endl;
     lexer l;
     vector<string> v = l.lex();

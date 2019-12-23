@@ -125,7 +125,10 @@ int openCli(int port, string ip) {
 int openServerCommand::execute(int i, vector<string> v) {
     cout << "openserver execute" << endl;
     int port = stoi(v[i + 1]);
-    openSer(port);
+    int opened = openSer(port);
+    while (opened != 0) {
+        opened = openSer(port);
+    }
     unordered_map<string,varObj*> m = variables::getInstance()->getSimMap();
     return numOfPar + 1;
 }
@@ -146,28 +149,30 @@ int DefineVarCommand::execute(int i, vector<string> v) {
     if (v[i] == "var") {
         varName = v[i + 1];
         if (v[i + 2] == "->") {
-            var->setSim(v[i + 4]);
+            string sim = v[i + 4];
+            var = variables::getInstance()->searchSim(sim);
+            //var->setSim(v[i + 4]);
             var->setF(true);
             numOfPar = 4;
         } else if (v[i + 2] == "<-") {
             // search sim in simMap:
             string sim = v[i + 4];
             var->setF(false);
-            *var = variables::getInstance()->searchSim(sim);
-            cout <<"define var command execute ->";
-            cout<<var->getVal()<<endl;
-            cout<<var->getSim()<<endl;
+            var = variables::getInstance()->searchSim(sim);
             numOfPar = 4;
         } else if (v[i + 2] == "=") {
             var->setVal(express(v[i + 3]));
             numOfPar = 3;
         }
-        variables::getInstance()->setVarInNameMap(varName, *var);
+        variables::getInstance()->getNameMap()->insert({varName,var});
+        //variables::getInstance()->setVarInNameMap(varName, *var);
+        //variables::getInstance()->setVarInSimMap(var->getSim(), *var);
     } else { // var already defined:
         varName = v[i];
         *var = variables::getInstance()->getVarFromName(v[i]);
         var->setVal(express(v[i + 2]));
-        variables::getInstance()->setVarInNameMap(varName, *var);
+        variables::getInstance()->getNameMap()->insert({varName,var});
+        //variables::getInstance()->setVarInNameMap(varName, *var);
         numOfPar = 2;
     }
     if (var->getF()) {
@@ -374,9 +379,9 @@ for (int i =0; i < s.length(); i++){
 command::command() {}
 
 int PrintCommand::execute(int i, vector<string> v) {
-    unordered_map<string, varObj> m =variables::getInstance()->getNameMap();
+    unordered_map<string, varObj*> *m =variables::getInstance()->getNameMap();
     unordered_map<string, varObj*> simMap =variables::getInstance()->getSimMap();
-    if (m.find(v[i + 1]) != m.end()) {
+    if (m->find(v[i + 1]) != m->end()) {
         //cout << variables::getInstance()->getVarFromName(v[i + 1]).getVal() <<endl;
         ////
         string simName = variables::getInstance()->getVarFromName(v[i + 1]).getSim();
