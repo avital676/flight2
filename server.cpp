@@ -15,8 +15,8 @@ server::server(bool do_work) {
     work = do_work;
 }
 void server::dataToMap(char* data) {
-    unordered_map<string, varStruct> nameMap = variables::getInstance()->getNameMap();
-    unordered_map<string, varStruct*> simMap = variables::getInstance()->getSimMap();
+    unordered_map<string, varObj*> nameMap = variables::getInstance()->nameMap;
+    unordered_map<string, varObj*> simMap = variables::getInstance()->simMap;
     string s = "";
     int i;
     int counter = 0;
@@ -32,34 +32,41 @@ void server::dataToMap(char* data) {
     else{
         word1=word2.substr(0, index2);
     }
-    ////// CHECK /n take only between 2 \n!!!!!!!!!!
-
+   // cout << "starting for loop in dataToMap" << endl;
     for (i = 0; i < word1.size(); i++) {
         if (data[i] != ',') {
             s += word1[i];
         } else {
+         //   cout << "setting s" << endl;
             sim_name = variables::getInstance()->nameArr[counter];
-            varStruct *v = variables::getInstance()->getVarFromSim(sim_name);
-            cout << v->sim << endl;
-            v->value = stof(s.c_str());
-            variables::getInstance()->setVarInSimMap(sim_name, v);
+            //varObj *v = variables::getInstance()->getVarFromSim(sim_name);
+            varObj *v = variables::getInstance()->simMap[sim_name];
+           // cout << "got var from simMap" << endl;
+            //cout << v.getVal() << endl;
+            v->setVal(atof(s.c_str()));
+            //variables::getInstance()->setVarInSimMap(sim_name, *v);
+            variables::getInstance()->simMap[sim_name] = v;
             counter++;
-
             s = "";
 
         }
     }
     if (s!="") {
-        cout << s << endl;
+        //cout << s << endl;
         sim_name = variables::getInstance()->nameArr[counter];
-        unordered_map<string, varStruct*> m = variables::getInstance()->getSimMap();
-        varStruct *v = variables::getInstance()->getVarFromSim(sim_name);
-        cout << v->sim << endl;
-        cout << v->value << endl;
-        v->value = stof(s.c_str());
-        variables::getInstance()->setVarInSimMap(sim_name, v);
+        unordered_map<string, varObj*> m = variables::getInstance()->simMap;
+        //varObj *v = variables::getInstance()->getVarFromSim(sim_name);
+        varObj *v = variables::getInstance()->simMap[sim_name];
+        //cout << v->getSim() << endl;
+        //cout << v->getVal() << endl;
+        v->setVal(atof(s.c_str()));
+        //variables::getInstance()->setVarInSimMap(sim_name, *v);
+        variables::getInstance()->simMap[sim_name] = v;
         s = "";
+
     }
+    unordered_map<string, varObj*> simMapUpdate = variables::getInstance()->simMap;
+
 }
 
 //void server::dataToMap(char* data) {

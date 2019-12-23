@@ -18,7 +18,7 @@ public:
     static keepThreads* getInstance();
     thread serverTread;
     thread clientTread;
-    bool is_open= false;
+    bool is_open = false;
 
 
     };
