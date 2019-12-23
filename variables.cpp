@@ -117,149 +117,149 @@ void variables::initialize() {
     //v11->setSim("/instrumentation/encoder/pressure-alt-ft");
     //simMap[name] = v11;
 
-    varObj *v12 = new varObj;
+    //varObj *v12 = new varObj;
     name = "gps_indicated-altitude-ft";
     nameArr[12] = name;
-    v12->setSim("/instrumentation/gps/indicated-altitude-ft");
-    simMap[name] = v12;
+    //v12->setSim("/instrumentation/gps/indicated-altitude-ft");
+    //simMap[name] = v12;
 
-    varObj *v13 = new varObj;
+    //varObj *v13 = new varObj;
     name = "gps_indicated-ground-speed-kt";
     nameArr[13] = name;
-    v13->setSim("/instrumentation/gps/indicated-ground-speed-kt");
-    simMap[name] = v13;
+   // v13->setSim("/instrumentation/gps/indicated-ground-speed-kt");
+    //simMap[name] = v13;
 
-    varObj *v14 = new varObj;
+    //varObj *v14 = new varObj;
     name = "gps_indicated-vertical-speed";
     nameArr[14] = name;
-    v14->setSim("/instrumentation/gps/indicated-vertical-speed");
-    simMap[name] = v14;
+   // v14->setSim("/instrumentation/gps/indicated-vertical-speed");
+    //simMap[name] = v14;
 
-    varObj *v15 = new varObj;
+    //varObj *v15 = new varObj;
     name = "indicated-heading-deg";
     nameArr[15] = name;
-    v15->setSim("/instrumentation/heading-indicator/indicated-heading-deg");
-    simMap[name] = v15;
+    //v15->setSim("/instrumentation/heading-indicator/indicated-heading-deg");
+   // simMap[name] = v15;
 
-    varObj *v16 = new varObj;
+    //varObj *v16 = new varObj;
     name = "magnetic-compass_indicated-heading-deg";
     nameArr[16] = name;
-    v16->setSim("/instrumentation/magnetic-compass/indicated-heading-deg");
-    simMap[name] = v16;
+    //v16->setSim("/instrumentation/magnetic-compass/indicated-heading-deg");
+    //simMap[name] = v16;
 
-    varObj *v17 = new varObj;
+    //varObj *v17 = new varObj;
     name = "slip-skid-ball_indicated-slip-skid";
     nameArr[17] = name;
-    v17->setSim("/instrumentation/slip-skid-ball/indicated-slip-skid");
-    simMap[name] = v17;
+    //v17->setSim("/instrumentation/slip-skid-ball/indicated-slip-skid");
+    //simMap[name] = v17;
 
-    varObj *v18 = new varObj;
+   // varObj *v18 = new varObj;
     name = "turn-indicator_indicated-turn-rate";
     nameArr[18] = name;
-    v18->setSim("/instrumentation/turn-indicator/indicated-turn-rate");
-    simMap[name] = v18;
+    //v18->setSim("/instrumentation/turn-indicator/indicated-turn-rate");
+   // simMap[name] = v18;
 
-    varObj *v19 = new varObj;
+   // varObj *v19 = new varObj;
     name = "vertical-speed-indicator_indicated-speed-fpm";
     nameArr[19] = name;
-    v19->setSim("/instrumentation/vertical-speed-indicator/indicated-speed-fpm");
-    simMap[name] = v19;
+    //v19->setSim("/instrumentation/vertical-speed-indicator/indicated-speed-fpm");
+  //  simMap[name] = v19;
 
-    varObj *v20 = new varObj;
+   // varObj *v20 = new varObj;
     name = "flight_aileron";
     nameArr[20] = name;
-    v20->setSim("/controls/flight/aileron");
-    simMap[name] = v20;
+    //v20->setSim("/controls/flight/aileron");
+    //simMap[name] = v20;
 
-    varObj *v21 = new varObj;
+    //varObj *v21 = new varObj;
     name = "flight_elevator";
     nameArr[21] = name;
-    v21->setSim("/controls/flight/elevator");
-    simMap[name] = v21;
+    //v21->setSim("/controls/flight/elevator");
+    //simMap[name] = v21;
 
-    varObj *v22 = new varObj;
+   // varObj *v22 = new varObj;
     name = "flight_rudder";
     nameArr[22] = name;
-    v22->setSim("/controls/flight/rudder");
-    simMap[name] = v22;
+   // v22->setSim("/controls/flight/rudder");
+    //simMap[name] = v22;
 
-    varObj *v23 = new varObj;
+   // varObj *v23 = new varObj;
     name = "flight_flaps";
     nameArr[23] = name;
-    v23->setSim("/controls/flight/flaps");
-    simMap[name] = v23;
+   // v23->setSim("/controls/flight/flaps");
+   // simMap[name] = v23;
 
-    varObj *v24 = new varObj;
+   // varObj *v24 = new varObj;
     name = "engine_throttle";
     nameArr[24] = name;
-    v24->setSim("/controls/engines/engine/throttle");
-    simMap[name] = v24;
+   // v24->setSim("/controls/engines/engine/throttle");
+   // simMap[name] = v24;
 
-    varObj *v25 = new varObj;
+   // varObj *v25 = new varObj;
     name = "current-engine_throttle";
     nameArr[25] = name;
-    v25->setSim("/controls/engines/current-engine/throttle");
-    simMap[name] = v25;
+   // v25->setSim("/controls/engines/current-engine/throttle");
+   // simMap[name] = v25;
 
-    varObj *v26 = new varObj;
+   // varObj *v26 = new varObj;
     name = "switches_master-avionics";
     nameArr[26] = name;
-    v26->setSim("/controls/switches/master-avionics");
-    simMap[name] = v26;
+   // v26->setSim("/controls/switches/master-avionics");
+   // simMap[name] = v26;
 
-    varObj *v27 = new varObj;
+   // varObj *v27 = new varObj;
     name = "switches_starter";
     nameArr[27] = name;
-    v27->setSim("/controls/switches/starter");
-    simMap[name] = v27;
+   // v27->setSim("/controls/switches/starter");
+   // simMap[name] = v27;
 
-    varObj *v28 = new varObj;
+   // varObj *v28 = new varObj;
     name = "active-engine_auto-start";
     nameArr[28] = name;
-    v28->setSim("/engines/active-engine/auto-start");
-    simMap[name] = v28;
+   // v28->setSim("/engines/active-engine/auto-start");
+   // simMap[name] = v28;
 
-    varObj *v29 = new varObj;
+   // varObj *v29 = new varObj;
     name = "flight_speedbrake";
     nameArr[29] = name;
-    v29->setSim("/controls/flight/speedbrake");
-    simMap[name] = v29;
+   // v29->setSim("/controls/flight/speedbrake");
+   // simMap[name] = v29;
 
-    varObj *v30 = new varObj;
+   // varObj *v30 = new varObj;
     name = "c172p_brake-parking";
     nameArr[30] = name;
-    v30->setSim("/sim/model/c172p/brake-parking");
-    simMap[name] = v30;
+   // v30->setSim("/sim/model/c172p/brake-parking");
+   // simMap[name] = v30;
 
-    varObj *v31 = new varObj;
+   // varObj *v31 = new varObj;
     name = "engine_primer";
     nameArr[31] = name;
-    v31->setSim("/controls/engines/engine/primer");
-    simMap[name] = v31;
+   // v31->setSim("/controls/engines/engine/primer");
+   // simMap[name] = v31;
 
-    varObj *v32 = new varObj;
+   // varObj *v32 = new varObj;
     name = "current-engine_mixture";
     nameArr[32] = name;
-    v32->setSim("/controls/engines/current-engine/mixture");
-    simMap[name] = v32;
+    //v32->setSim("/controls/engines/current-engine/mixture");
+   // simMap[name] = v32;
 
-    varObj *v33 = new varObj;
+   // varObj *v33 = new varObj;
     name = "switches_master-bat";
     nameArr[33] = name;
-    v33->setSim("/controls/switches/master-bat");
-    simMap[name] = v33;
+   // v33->setSim("/controls/switches/master-bat");
+   // simMap[name] = v33;
 
-    varObj *v34 = new varObj;
+   // varObj *v34 = new varObj;
     name = "switches_master-alt";
     nameArr[34] = name;
-    v34->setSim("/controls/switches/master-alt");
-    simMap[name] = v34;
+   // v34->setSim("/controls/switches/master-alt");
+   // simMap[name] = v34;
 
-    varObj *v35 = new varObj;
+   // varObj *v35 = new varObj;
     name = "engine_rpm";
     nameArr[35] = name;
-    v35->setSim("/engines/engine/rpm");
-    simMap[name] = v35;
+   // v35->setSim("/engines/engine/rpm");
+  //  simMap[name] = v35;
 }
 
 //unordered_map<string, varObj*>* variables::getNameMap() {
