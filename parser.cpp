@@ -32,8 +32,8 @@ void parser::parse() {
     command* c;
     while (i < token.size()) {
         //unordered_map<string, varObj*> m =variables::getInstance()->nameMap;
-        unordered_map<string, varObj*> m =variables::getInstance()->nameMap;
-        unordered_map<string, varObj*> simMap =variables::getInstance()->simMap;
+        unordered_map<string, varObj*> m =variables::getInstance()->getNameMap();
+        //unordered_map<string, varObj*> simMap =variables::getInstance()->simMap;
         if (comMap.find(token[i]) != comMap.end()) {
             c = comMap[token[i]];
             i += c->execute(i, token);

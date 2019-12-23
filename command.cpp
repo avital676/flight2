@@ -39,7 +39,7 @@ void sendToSimu(int client_socket) {
             sleep(0.1);
         } else {
             while (!q.empty()) {
-                string s = "set " + q.front().getSim().substr(1,-1) + " " + to_string(q.front().getVal()) + "\r\n";
+                string s = "set " + q.front().getSim() + " " + to_string(q.front().getVal()) + "\r\n";
                 //cout << s << endl;
                 char strToSend[s.length()+1];
                 strcpy(strToSend, s.c_str());
@@ -129,7 +129,6 @@ int openServerCommand::execute(int i, vector<string> v) {
     while (opened != 0) {
         opened = openSer(port);
     }
-    unordered_map<string,varObj*> m = variables::getInstance()->simMap;
     return numOfPar + 1;
 }
 
@@ -149,45 +148,49 @@ int DefineVarCommand::execute(int i, vector<string> v) {
     if (v[i] == "var") {
         varName = v[i + 1];
         if (v[i + 2] == "->") {
-            string sim = v[i + 4];
-            var = variables::getInstance()->searchSim(sim);
-            if(var->getSim()==""){
-                var = new varObj();
-            }
+            variables::getInstance()->addVar(v[i + 1], v[i + 4], 0, true);
+            //string sim = v[i + 4];
+            //var = variables::getInstance()->searchSim(sim);
+            //if(var->getSim()==""){
+            //    var = new varObj();
+            //}
             //var->setSim(v[i + 4]);
-            var->setF(true);
+            //var->setF(true);
             numOfPar = 4;
         } else if (v[i + 2] == "<-") {
+            variables::getInstance()->addVar(v[i + 1], v[i + 4], 0, false);
             // search sim in simMap:
-            string sim = v[i + 4];
-            var = variables::getInstance()->searchSim(sim);
-            var->setF(false);
+            //string sim = v[i + 4];
+            //var = variables::getInstance()->searchSim(sim);
+            //var->setF(false);
             numOfPar = 4;
         } else if (v[i + 2] == "=") {
-            var->setVal(express(v[i + 3]));
+            float value = express(v[i + 3]);
+            variables::getInstance()->addVar(v[i + 1], 0, value, false);
+            //var->setVal(express(v[i + 3]));
             numOfPar = 3;
         }
-        variables::getInstance()->nameMap[varName] = var;
-
+        //variables::getInstance()->nameMap[varName] = var;
     } else { // var already defined:
-        varName = v[i];
+        float value = express(v[i + 2]);
+        variables::getInstance()->setVarByName(v[i], value);
         //var = variables::getInstance()->getVarFromName(v[i]);
-        float t = express(v[i+2]);
-        cout<<t<<endl;
-        var = variables::getInstance()->nameMap[varName];
-        var->setVal(t);
-        cout<<var->getVal()<<endl;
-        variables::getInstance()->nameMap[varName] = var;
-        if (var->getF()) {
-            variables::getInstance()->searchSim(var->getSim())->setVal(t);
-        }
+        //float t = express(v[i+2]);
+        //cout<<t<<endl;
+        //var = variables::getInstance()->nameMap[varName];
+        //var->setVal(t);
+        //cout<<var->getVal()<<endl;
+        //variables::getInstance()->nameMap[varName] = var;
+        //if (var->getF()) {
+        //    variables::getInstance()->searchSim(var->getSim())->setVal(t);
+        //}
         //variables::getInstance()->nameMap.insert({varName,var});
-        cout<<variables::getInstance()->getVarFromName(varName)->getVal()<<endl;
+        //cout<<variables::getInstance()->getVarFromName(varName)->getVal()<<endl;
         //variables::getInstance()->setVarInNameMap(varName, *var);
         numOfPar = 2;
-        if (var->getF()) {
-            variables::getInstance()->q.push(*var);
-        }
+        //if (var->getF()) {
+        //    variables::getInstance()->q.push(*var);
+        //}
     }
     return numOfPar + 1;
 }
@@ -215,13 +218,13 @@ int ifCommand::execute(int i, vector<string> v) {
     int index;
     //if var  {...}
     if (v[i+2] == "{"){
-        varObj *v1=variables::getInstance()->getVarFromName(v[i + 1]);
-        if (v1->getVal()>0){
+        float value1 = variables::getInstance()->getValueByName(v[i + 1]);
+        if (value1 > 0){
             status= true;
             index=i+3;
         }
     }
-   double v1= express(v[i+1]);
+    double v1= express(v[i+1]);
     double v2= express(v[i+3]);
     //if var == exp  {...}
     if (v[i+4] == "{"){
@@ -369,28 +372,29 @@ for (int i =0; i < s.length(); i++){
             var += s[i];
         }
         if((s[i]=='+')||(s[i]=='*')||(s[i]=='-')||(s[i]=='/')){
-            float value;
-            if (variables::getInstance()->getVarFromName(s)->getF()) {
-                value = variables::getInstance()->getVarFromName(var)->getVal();
-                flag = "name";
-            } else {
-                string sim = variables::getInstance()->getVarFromName(var)->getSim();
-                value = variables::getInstance()->searchSim(sim)->getVal();
-                flag = "sim";
-            }
+            float value = variables::getInstance()->getValueByName(var);
+//            if (variables::getInstance()->getFbyName(var)) {
+//                value = variables::getInstance()->getValueByName(var);
+//                flag = "name";
+//            } else {
+//                string sim = variables::getInstance()->getVarFromName(var)->getSim();
+//                value = variables::getInstance()->searchSim(sim)->getVal();
+//                flag = "sim";
+//            }
 
             allVars+=var+"="+ to_string(value)+";";
             var="";
         }
     }
     if (var!=""){
-        float value;
-        if (flag == "name") {
-            value = variables::getInstance()->getVarFromName(var)->getVal();
-        } else {
-            string sim = variables::getInstance()->getVarFromName(var)->getSim();
-            value = variables::getInstance()->searchSim(sim)->getVal();
-        }
+        float value = variables::getInstance()->getValueByName(var);
+//        float value;
+//        if (flag == "name") {
+//            value = variables::getInstance()->getVarFromName(var)->getVal();
+//        } else {
+//            string sim = variables::getInstance()->getVarFromName(var)->getSim();
+//            value = variables::getInstance()->searchSim(sim)->getVal();
+//        }
 
         allVars+=var+"="+ to_string(value)+";";
     }
@@ -407,17 +411,20 @@ for (int i =0; i < s.length(); i++){
 command::command() {}
 
 int PrintCommand::execute(int i, vector<string> v) {
-    unordered_map<string, varObj*> m =variables::getInstance()->nameMap;
-    unordered_map<string, varObj*> simMap =variables::getInstance()->simMap;
+    unordered_map<string, varObj*> m =variables::getInstance()->getNameMap();
+
     if (m.find(v[i + 1]) != m.end()) {
-        float value;
-        if (variables::getInstance()->getVarFromName(v[i + 1])->getF()) {
-            value = variables::getInstance()->getVarFromName(v[i + 1])->getVal();
-        } else {
-            string sim = variables::getInstance()->getVarFromName(v[i + 1])->getSim();
-            value = variables::getInstance()->searchSim(sim)->getVal();
-        }
-        cout << value << endl;
+        cout<<"inside"<<endl;
+        float value = m[v[i+1]]->getVal();
+        cout<<value<<endl;
+//        float value;
+//        if (variables::getInstance()->getVarFromName(v[i + 1])->getF()) {
+//            value = variables::getInstance()->getVarFromName(v[i + 1])->getVal();
+//        } else {
+//            string sim = variables::getInstance()->getVarFromName(v[i + 1])->getSim();
+//            value = variables::getInstance()->searchSim(sim)->getVal();
+//        }
+//        cout << value << endl;
     } else {
         cout << v[i + 1] << endl;
     }

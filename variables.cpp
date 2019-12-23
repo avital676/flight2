@@ -22,25 +22,61 @@ variables* variables::getInstance() {
 //    return simMap;
 //}
 
-void variables::setVarInNameMap(string v, varObj& s) {
-    mutex_lock.lock();
-    nameMap[v] = &s;
-    mutex_lock.unlock();
+//void variables::setVarInNameMap(string v, varObj& s) {
+//    mutex_lock.lock();
+//    nameMap[v] = &s;
+//    mutex_lock.unlock();
+//}
+
+//void variables::setVarInSimMap(string v, varObj& s) {
+//    mutex_lock.lock();
+//    simMap[v] = &s;
+//    mutex_lock.unlock();
+//}
+
+void variables::addVar(string name, string s, float value, bool f) {
+    varObj* v = new varObj();
+    v->setSim(s);
+    v->setVal(value);
+    v->setF(f);
+    nameMap[name] = v;
+    simMap[s] = v;
 }
 
-void variables::setVarInSimMap(string v, varObj& s) {
-    mutex_lock.lock();
-    simMap[v] = &s;
-    mutex_lock.unlock();
+void variables::setVarByName(string name, float value) {
+    if(nameMap.find(name) != nameMap.end()) {
+        nameMap.find(name)->second->setVal(value);
+    }
+    varObj *v = nameMap.find(name)->second;
+    q.push(*v);
 }
 
-varObj* variables::getVarFromName(string v) {
-    return nameMap[v];
+void variables::setVarBySim(string sim, float value) {
+    if(simMap.find(sim) != simMap.end()) {
+        simMap.find(sim)->second->setVal(value);
+    }
+    //simMap[sim]->setVal(value);
 }
 
-varObj* variables::getVarFromSim(string v) {
-    return simMap[v];
+float variables::getValueByName(string name) {
+    return nameMap[name]->getVal();
 }
+
+bool variables::getFbyName(string name) {
+    return nameMap[name]->getF();
+}
+
+unordered_map<string,varObj*> variables::getNameMap() {
+    return nameMap;
+}
+
+//varObj* variables::getVarFromName(string v) {
+//    return nameMap[v];
+//}
+
+//varObj* variables::getVarFromSim(string v) {
+//    return simMap[v];
+//}
 
 void variables::initialize() {
     //varObj *v0 = new varObj;
@@ -266,16 +302,16 @@ void variables::initialize() {
 //    return &nameMap;
 //}
 
-varObj* variables::searchSim(string s) {
-    unordered_map<string, varObj*> m = variables::getInstance()->simMap;
-    unordered_map<string, varObj*>::iterator it;
-    for ( it = m.begin(); it != m.end(); it++ ) {
-        if (it->second->getSim() == s) {
-            // return pointer to the valStruct that has this sim:
-            return it->second;
-        }
-    }
-   // return ;
-}
+//varObj* variables::searchSim(string s) {
+//    unordered_map<string, varObj*> m = variables::getInstance()->simMap;
+//    unordered_map<string, varObj*>::iterator it;
+//    for ( it = m.begin(); it != m.end(); it++ ) {
+//        if (it->second->getSim() == s) {
+//            // return pointer to the valStruct that has this sim:
+//            return it->second;
+//        }
+//    }
+//   // return ;
+//}
 
 
