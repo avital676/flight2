@@ -35,13 +35,13 @@ void acceptFromSimu(int client_socket) {
 void sendToSimu(int client_socket) {
     int is_sent;
     while(keepThreads::getInstance()->is_open) {
-        queue<varStruct> q = variables::getInstance()->q;
+        queue<varObj> q = variables::getInstance()->q;
         char strV[]="";
         if(q.empty()) {
             sleep(0.1);
         } else {
             while (!q.empty()) {
-                string s = "set " + q.front().sim.substr(1,-1) + " " + to_string(q.front().value) + "\r\n";
+                string s = "set " + q.front().getSim().substr(1,-1) + " " + to_string(q.front().getVal()) + "\r\n";
                 //cout << s << endl;
                 char strToSend[s.length()+1];
                 strcpy(strToSend, s.c_str());
@@ -141,34 +141,34 @@ int ConnectCommand::execute(int i, vector<string> v) {
 
 int DefineVarCommand::execute(int i, vector<string> v) {
     //cout << "define var execute" << endl;
-    varStruct* var = new varStruct;
+    varObj* var = new varObj;
     string varName;
     // define new var:
     if (v[i] == "var") {
         varName = v[i + 1];
         if (v[i + 2] == "->") {
-            var->sim = v[i + 4];
-            var->set = true;
+            var->setSim(v[i + 4]);
+            var->setF(true);
             numOfPar = 4;
         } else if (v[i + 2] == "<-") {
             // search sim in simMap:
             string sim = v[i + 4];
-            var->set = false;
+            var->setF(false);
             var = variables::getInstance()->searchSim(sim);
             numOfPar = 4;
         } else if (v[i + 2] == "=") {
-            var->value = express(v[i + 3]);
+            var->setVal(express(v[i + 3]));
             numOfPar = 3;
         }
         variables::getInstance()->setVarInNameMap(varName, *var);
     } else { // var already defined:
         varName = v[i];
         *var = variables::getInstance()->getVarFromName(v[i]);
-        var->value = express(v[i + 2]);
+        var->setVal(express(v[i + 2]));
         variables::getInstance()->setVarInNameMap(varName, *var);
         numOfPar = 2;
     }
-    if (var->set) {
+    if (var->getF()) {
         variables::getInstance()->q.push(*var);
     }
     return numOfPar + 1;
@@ -197,8 +197,8 @@ int ifCommand::execute(int i, vector<string> v) {
     int index;
     //if var  {...}
     if (v[i+2] == "{"){
-        varStruct v1=variables::getInstance()->getVarFromName(v[i + 1]);
-        if (v1.value>0){
+        varObj v1=variables::getInstance()->getVarFromName(v[i + 1]);
+        if (v1.getVal()>0){
             status= true;
             index=i+3;
         }
@@ -350,13 +350,13 @@ for (int i =0; i < s.length(); i++){
             var += s[i];
         }
         if((s[i]=='+')||(s[i]=='*')||(s[i]=='-')||(s[i]=='/')){
-            float value = variables::getInstance()->getVarFromName(var).value;
+            float value = variables::getInstance()->getVarFromName(var).getVal();
             allVars+=var+"="+ to_string(value)+";";
             var="";
         }
     }
     if (var!=""){
-        float value = variables::getInstance()->getVarFromName(var).value;
+        float value = variables::getInstance()->getVarFromName(var).getVal();
         allVars+=var+"="+ to_string(value)+";";
     }
 
@@ -372,9 +372,9 @@ for (int i =0; i < s.length(); i++){
 command::command() {}
 
 int PrintCommand::execute(int i, vector<string> v) {
-    unordered_map<string, varStruct> m =variables::getInstance()->getNameMap();
+    unordered_map<string, varObj> m =variables::getInstance()->getNameMap();
     if (m.find(v[i + 1]) != m.end()) {
-        cout << variables::getInstance()->getVarFromName(v[i + 1]).value << endl;
+        cout << variables::getInstance()->getVarFromName(v[i + 1]).getVal() << endl;
     } else {
         cout << v[i + 1] << endl;
     }

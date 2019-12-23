@@ -15,8 +15,8 @@ server::server(bool do_work) {
     work = do_work;
 }
 void server::dataToMap(char* data) {
-    unordered_map<string, varStruct> nameMap = variables::getInstance()->getNameMap();
-    unordered_map<string, varStruct*> simMap = variables::getInstance()->getSimMap();
+    unordered_map<string, varObj> nameMap = variables::getInstance()->getNameMap();
+    unordered_map<string, varObj*> simMap = variables::getInstance()->getSimMap();
     string s = "";
     int i;
     int counter = 0;
@@ -39,9 +39,9 @@ void server::dataToMap(char* data) {
             s += word1[i];
         } else {
             sim_name = variables::getInstance()->nameArr[counter];
-            varStruct *v = variables::getInstance()->getVarFromSim(sim_name);
-            cout << v->sim << endl;
-            v->value = stof(s.c_str());
+            varObj *v = variables::getInstance()->getVarFromSim(sim_name);
+            cout << v->getSim() << endl;
+            v->setVal(stof(s.c_str()));
             variables::getInstance()->setVarInSimMap(sim_name, v);
             counter++;
 
@@ -52,11 +52,11 @@ void server::dataToMap(char* data) {
     if (s!="") {
         cout << s << endl;
         sim_name = variables::getInstance()->nameArr[counter];
-        unordered_map<string, varStruct*> m = variables::getInstance()->getSimMap();
-        varStruct *v = variables::getInstance()->getVarFromSim(sim_name);
-        cout << v->sim << endl;
-        cout << v->value << endl;
-        v->value = stof(s.c_str());
+        unordered_map<string, varObj*> m = variables::getInstance()->getSimMap();
+        varObj *v = variables::getInstance()->getVarFromSim(sim_name);
+        cout << v->getSim() << endl;
+        cout << v->getVal() << endl;
+        v->setVal(stof(s.c_str()));
         variables::getInstance()->setVarInSimMap(sim_name, v);
         s = "";
     }
