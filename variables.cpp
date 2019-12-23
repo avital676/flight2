@@ -18,9 +18,9 @@ variables* variables::getInstance() {
     return instance;
 }
 
-unordered_map<string, varObj*> variables::getSimMap() {
-    return simMap;
-}
+//unordered_map<string, varObj*> variables::getSimMap() {
+//    return simMap;
+//}
 
 void variables::setVarInNameMap(string v, varObj& s) {
     mutex_lock.lock();
@@ -34,12 +34,12 @@ void variables::setVarInSimMap(string v, varObj& s) {
     mutex_lock.unlock();
 }
 
-varObj& variables::getVarFromName(string v) {
-    return *nameMap[v];
+varObj* variables::getVarFromName(string v) {
+    return nameMap[v];
 }
 
-varObj& variables::getVarFromSim(string v) {
-    return *simMap[v];
+varObj* variables::getVarFromSim(string v) {
+    return simMap[v];
 }
 
 void variables::initialize() {
@@ -262,12 +262,12 @@ void variables::initialize() {
     simMap[name] = v35;
 }
 
-unordered_map<string, varObj*>* variables::getNameMap() {
-    return &nameMap;
-}
+//unordered_map<string, varObj*>* variables::getNameMap() {
+//    return &nameMap;
+//}
 
 varObj* variables::searchSim(string s) {
-    unordered_map<string, varObj*> m = variables::getInstance()->getSimMap();
+    unordered_map<string, varObj*> m = variables::getInstance()->simMap;
     unordered_map<string, varObj*>::iterator it;
     for ( it = m.begin(); it != m.end(); it++ ) {
         if (it->second->getSim() == s) {
