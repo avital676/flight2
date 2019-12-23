@@ -24,10 +24,8 @@ void acceptFromSimu(int client_socket) {
     char buffer[1024] = {0};
     int valread;
     while (keepThreads::getInstance()->is_open) {
-        //cout << "reading" << endl;
         valread = read( client_socket , buffer, 1024);
-        //cout<<buffer[0]<<endl;
-        //cout << buffer << endl;
+        cout << "read" << endl;
         ser.dataToMap(buffer);
     }
 }
@@ -128,6 +126,7 @@ int openServerCommand::execute(int i, vector<string> v) {
     cout << "openserver execute" << endl;
     int port = stoi(v[i + 1]);
     openSer(port);
+    unordered_map<string,varObj*> m = variables::getInstance()->getSimMap();
     return numOfPar + 1;
 }
 
@@ -154,7 +153,10 @@ int DefineVarCommand::execute(int i, vector<string> v) {
             // search sim in simMap:
             string sim = v[i + 4];
             var->setF(false);
-            var = variables::getInstance()->searchSim(sim);
+            *var = variables::getInstance()->searchSim(sim);
+            cout <<"define var command execute ->";
+            cout<<var->getVal()<<endl;
+            cout<<var->getSim()<<endl;
             numOfPar = 4;
         } else if (v[i + 2] == "=") {
             var->setVal(express(v[i + 3]));
@@ -373,8 +375,13 @@ command::command() {}
 
 int PrintCommand::execute(int i, vector<string> v) {
     unordered_map<string, varObj> m =variables::getInstance()->getNameMap();
+    unordered_map<string, varObj*> simMap =variables::getInstance()->getSimMap();
     if (m.find(v[i + 1]) != m.end()) {
-        cout << variables::getInstance()->getVarFromName(v[i + 1]).getVal() << endl;
+        //cout << variables::getInstance()->getVarFromName(v[i + 1]).getVal() <<endl;
+        ////
+        string simName = variables::getInstance()->getVarFromName(v[i + 1]).getSim();
+        cout << variables::getInstance()->getVarFromSim(simName).getVal();
+        cout<<"              print";
     } else {
         cout << v[i + 1] << endl;
     }

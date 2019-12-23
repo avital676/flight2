@@ -36,11 +36,11 @@ public:
     void setVarInNameMap(string v, varObj s);
     void setVarInSimMap(string v, varObj* s);
     //varStruct getVar(string v);
-    varObj* searchSim(string s);
+    varObj& searchSim(string s);
     string nameArr[36];
     queue<varObj> q;
     varObj getVarFromName(string v);
-    varObj* getVarFromSim(string v);
+    varObj& getVarFromSim(string v);
 
 };
 

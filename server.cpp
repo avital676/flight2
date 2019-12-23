@@ -32,34 +32,38 @@ void server::dataToMap(char* data) {
     else{
         word1=word2.substr(0, index2);
     }
-    ////// CHECK /n take only between 2 \n!!!!!!!!!!
 
     for (i = 0; i < word1.size(); i++) {
         if (data[i] != ',') {
             s += word1[i];
         } else {
             sim_name = variables::getInstance()->nameArr[counter];
-            varObj *v = variables::getInstance()->getVarFromSim(sim_name);
-            cout << v->getSim() << endl;
-            v->setVal(stof(s.c_str()));
-            variables::getInstance()->setVarInSimMap(sim_name, v);
+            varObj v = variables::getInstance()->getVarFromSim(sim_name);
+            //cout << v.getVal() << endl;
+            v.setVal(atof(s.c_str()));
+            variables::getInstance()->setVarInSimMap(sim_name, &v);
+            cout << variables::getInstance()->getVarFromSim(sim_name).getVal() << endl;
+            cout << variables::getInstance()->getVarFromSim(sim_name).getSim() << endl;
             counter++;
-
             s = "";
 
         }
     }
     if (s!="") {
-        cout << s << endl;
+        //cout << s << endl;
         sim_name = variables::getInstance()->nameArr[counter];
         unordered_map<string, varObj*> m = variables::getInstance()->getSimMap();
-        varObj *v = variables::getInstance()->getVarFromSim(sim_name);
-        cout << v->getSim() << endl;
-        cout << v->getVal() << endl;
-        v->setVal(stof(s.c_str()));
-        variables::getInstance()->setVarInSimMap(sim_name, v);
+        varObj v = variables::getInstance()->getVarFromSim(sim_name);
+        //cout << v->getSim() << endl;
+        //cout << v->getVal() << endl;
+        v.setVal(atof(s.c_str()));
+        variables::getInstance()->setVarInSimMap(sim_name, &v);
+        cout << variables::getInstance()->getVarFromSim(sim_name).getVal() << endl;
         s = "";
+
     }
+    unordered_map<string, varObj*> simMapUpdate = variables::getInstance()->getSimMap();
+
 }
 
 //void server::dataToMap(char* data) {

@@ -38,8 +38,8 @@ varObj variables::getVarFromName(string v) {
     return nameMap[v];
 }
 
-varObj* variables::getVarFromSim(string v) {
-    return simMap[v];
+varObj& variables::getVarFromSim(string v) {
+    return *simMap[v];
 }
 
 void variables::initialize() {
@@ -267,16 +267,16 @@ unordered_map<string, varObj> variables::getNameMap() {
     return nameMap;
 }
 
-varObj* variables::searchSim(string s) {
+varObj& variables::searchSim(string s) {
     unordered_map<string, varObj*> m = variables::getInstance()->getSimMap();
     unordered_map<string, varObj*>::iterator it;
     for ( it = m.begin(); it != m.end(); it++ ) {
         if (it->second->getSim() == s) {
             // return pointer to the valStruct that has this sim:
-            return it->second;
+            return *it->second;
         }
     }
-    return nullptr;
+//    return nullptr;
 }
 
 
