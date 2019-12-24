@@ -18,44 +18,33 @@ variables* variables::getInstance() {
     return instance;
 }
 
-//unordered_map<string, varObj*> variables::getSimMap() {
-//    return simMap;
-//}
-
-//void variables::setVarInNameMap(string v, varObj& s) {
-//    mutex_lock.lock();
-//    nameMap[v] = &s;
-//    mutex_lock.unlock();
-//}
-
-//void variables::setVarInSimMap(string v, varObj& s) {
-//    mutex_lock.lock();
-//    simMap[v] = &s;
-//    mutex_lock.unlock();
-//}
-
 void variables::addVar(string name, string s, float value, bool f) {
+    mutex_lock.lock();
     varObj* v = new varObj();
     v->setSim(s);
     v->setVal(value);
     v->setF(f);
     nameMap[name] = v;
     simMap[s] = v;
+    mutex_lock.unlock();
 }
 
 void variables::setVarByName(string name, float value) {
+    mutex_lock.lock();
     if(nameMap.find(name) != nameMap.end()) {
         nameMap.find(name)->second->setVal(value);
     }
     varObj *v = nameMap.find(name)->second;
     q.push(*v);
+    mutex_lock.unlock();
 }
 
 void variables::setVarBySim(string sim, float value) {
+    mutex_lock.lock();
     if(simMap.find(sim) != simMap.end()) {
         simMap.find(sim)->second->setVal(value);
     }
-    //simMap[sim]->setVal(value);
+    mutex_lock.unlock();
 }
 
 float variables::getValueByName(string name) {

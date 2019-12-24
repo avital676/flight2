@@ -31,26 +31,28 @@ void acceptFromSimu(int client_socket) {
 }
 
 void sendToSimu(int client_socket) {
-    int is_sent;
     while(keepThreads::getInstance()->is_open) {
         queue<varObj> q = variables::getInstance()->q;
-        char strV[]="";
         if(q.empty()) {
             sleep(0.1);
         } else {
             while (!q.empty()) {
                 string s = "set " + q.front().getSim() + " " + to_string(q.front().getVal()) + "\r\n";
                 //cout << s << endl;
-                char strToSend[s.length()+1];
-                strcpy(strToSend, s.c_str());
-                is_sent = send(client_socket, strToSend, strlen(strV), 0);
+                const char *msg = s.c_str();
+                int is_sent = send(client_socket, msg, strlen(msg), 0);
                 if (is_sent == -1) {
                     cerr << "error sending message" << endl;
                 }
                 q.pop();
+
+                char buffer[1024] = {0};
+                int valread = read( client_socket , buffer, 1024);
+                std::cout<<buffer<<std::endl;
             }
         }
     }
+    close(client_socket);
 }
 
 int openSer(int port) {
@@ -104,20 +106,17 @@ int openCli(int port, string ip) {
     }
     sockaddr_in address;
     address.sin_family = AF_INET;
-    cout << ip << endl;
-    const char* ipConst = ip.c_str();
-    address.sin_addr.s_addr = inet_addr(ipConst);
+    address.sin_addr.s_addr = inet_addr(ip.c_str());
     address.sin_port = htons(port);
-    cout << port << endl;
-    cout << ip << endl;
     // request connection with server:
-    int is_connect = connect(client_socket, (struct sockaddr*) &address, sizeof(address));
+    int is_connect = connect(client_socket, (struct sockaddr *)&address, sizeof(address));
     if (is_connect == -1) {
         cerr << "Could not connect to host server" << endl;
         return -2;
     } else { // client is connected
         cout << "opened client" << endl;
         keepThreads::getInstance()->clientTread = thread(sendToSimu, client_socket);
+        keepThreads::getInstance()->clientTread.detach();
     }
 
 }
@@ -373,29 +372,12 @@ for (int i =0; i < s.length(); i++){
         }
         if((s[i]=='+')||(s[i]=='*')||(s[i]=='-')||(s[i]=='/')){
             float value = variables::getInstance()->getValueByName(var);
-//            if (variables::getInstance()->getFbyName(var)) {
-//                value = variables::getInstance()->getValueByName(var);
-//                flag = "name";
-//            } else {
-//                string sim = variables::getInstance()->getVarFromName(var)->getSim();
-//                value = variables::getInstance()->searchSim(sim)->getVal();
-//                flag = "sim";
-//            }
-
             allVars+=var+"="+ to_string(value)+";";
             var="";
         }
     }
     if (var!=""){
         float value = variables::getInstance()->getValueByName(var);
-//        float value;
-//        if (flag == "name") {
-//            value = variables::getInstance()->getVarFromName(var)->getVal();
-//        } else {
-//            string sim = variables::getInstance()->getVarFromName(var)->getSim();
-//            value = variables::getInstance()->searchSim(sim)->getVal();
-//        }
-
         allVars+=var+"="+ to_string(value)+";";
     }
 
@@ -406,25 +388,13 @@ for (int i =0; i < s.length(); i++){
     return e->calculate();
 }
 
-
-
 command::command() {}
 
 int PrintCommand::execute(int i, vector<string> v) {
     unordered_map<string, varObj*> m =variables::getInstance()->getNameMap();
-
     if (m.find(v[i + 1]) != m.end()) {
-        cout<<"inside"<<endl;
         float value = m[v[i+1]]->getVal();
         cout<<value<<endl;
-//        float value;
-//        if (variables::getInstance()->getVarFromName(v[i + 1])->getF()) {
-//            value = variables::getInstance()->getVarFromName(v[i + 1])->getVal();
-//        } else {
-//            string sim = variables::getInstance()->getVarFromName(v[i + 1])->getSim();
-//            value = variables::getInstance()->searchSim(sim)->getVal();
-//        }
-//        cout << value << endl;
     } else {
         cout << v[i + 1] << endl;
     }
