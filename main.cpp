@@ -8,11 +8,11 @@
 
 int main() {
     variables::getInstance();
-//    string s="alt=-372.033875";
+//    string s="h=0.000000;heading=0.000000;";
 //
 //    Interpreter *i = new Interpreter();
 //    i->setVariables(s);
-//    Expression *e=i->interpret("alt");
+//    Expression *e=i->interpret("(h-heading)/80");
     std::cout << "Hello, World!" << std::endl;
     cout<<"noaooaoaooaoaoooaoa"<<endl;
     lexer l;

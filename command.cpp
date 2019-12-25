@@ -366,19 +366,24 @@ Interpreter *i = new Interpreter();
 string allVars="";
 string var="";
 string flag;
-
-for (int i =0; i < s.length(); i++){
+string str = spaceDelete(s);
+cout<<"delete space   ";
+cout<<str<<endl;
+for (int i =0; i < str.length(); i++){
         //find variables
-        if ((s[i]<='z')&&(s[i]>='a')) {
-            var += s[i];
+        if ((str[i]<='z')&&(str[i]>='a')) {
+            var += str[i];
         }
-        if((s[i]=='+')||(s[i]=='*')||(s[i]=='-')||(s[i]=='/')){
-            cout<<var;
-            cout<<"  var"<<endl;
-            float value = variables::getInstance()->getValueByName(var);
-            cout<<value<<endl;
-            allVars+=var+"="+ to_string(value)+";";
-            var="";
+        if((str[i]=='+')||(str[i]=='*')||(str[i]=='-')||(str[i]=='/')){
+            if (var!="") {
+                cout << var;
+                cout << "  var" << endl;
+
+                float value = variables::getInstance()->getValueByName(var);
+                cout << value << endl;
+                allVars += var + "=" + to_string(value) + ";";
+                var = "";
+            }
         }
     }
     if (var!=""){
@@ -401,7 +406,7 @@ for (int i =0; i < s.length(); i++){
         i->setVariables(allVars);
     }
     cout<<allVars<<endl;
-    Expression *e=i->interpret(s);
+    Expression *e=i->interpret(str);
     cout<<"end express"<<endl;
     return e->calculate();
 }
@@ -425,4 +430,16 @@ int SleepCommand::execute(int i, vector<string> v) {
     sleep(atof(v[i + 1].c_str()) / 1000);
     numOfPar = 1;
     return numOfPar + 1;
+}
+string command::spaceDelete(string input){
+    string output ="";
+    for (int i=0; i<input.length(); i++){
+        if (input[i]==' '){
+            i++;
+        }
+        else{
+            output+=input[i];
+        }
+    }
+    return output;
 }

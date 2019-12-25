@@ -21,6 +21,7 @@ public:
     int numOfPar;
     virtual int execute(int, vector<string>){} ;
     double express(string s);
+    string spaceDelete(string input);
 
 };
 
@@ -55,7 +56,8 @@ public:
     void setCom(command a);
     int execute(int, vector<string>) override;
 
-};
+
+    };
 
 class ifCommand: public ConditionParser{
 public:
