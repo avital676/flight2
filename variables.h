@@ -49,6 +49,7 @@ public:
     float getValueByName(string name);
     unordered_map<string,varObj*> getNameMap();
     bool getFbyName(string name);
+    vector<pair<string, float>> getChangedVars();
 };
 
 #endif //FLIGHT1_VARIABLES_H

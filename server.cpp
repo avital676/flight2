@@ -15,97 +15,53 @@ server::server(bool do_work) {
     work = do_work;
 }
 void server::dataToMap(char* data) {
-//    unordered_map<string, varObj*> nameMap = variables::getInstance()->nameMap;
-//    unordered_map<string, varObj*> simMap = variables::getInstance()->simMap;
     string s = "";
     int i;
     int counter = 0;
     string sim_name;
-    size_t index1 = string(data).find("\n");
+ //   cout<<"data"<<endl;
+ //   cout<<data<<endl;
     string word1=string(data);
-    string word2=word1.substr(index1 + 1,word1.length());
-    size_t index2=word2.find("\n");
-    //only one \n
-    if (word2 == ""){
-        word1=word1.substr(0,index1);
-    }
-    else{
-        word1=word2.substr(0, index2);
-    }
+//    int index1 = word1.find("\n");
+//    if (index1 < word1.length()) {
+//        string word2 = word1.substr(index1 + 1, word1.length());
+//        size_t index2 = word2.find(index1+1,"\n");
+//        //only one \n
+//        if (word2 == "") {
+//            word1 = word1.substr(0, index1);
+//        } else {
+//            word1 = word2.substr(0, index2);
+//        }
+//    }
+        if (word1 == "") {
+            cout << "empty input" << endl;
+        }
+
+   // cout<<"after cut"<<endl;
    // cout << word1 << endl;
     for (i = 0; i < word1.size(); i++) {
         if (data[i] != ',') {
             s += word1[i];
         } else {
            // cout << s << endl;
-            float value = atof(s.c_str());
+            float value = stof(s.c_str());
             variables::getInstance()->setVarBySim(variables::getInstance()->nameArr[counter], value);
-//            sim_name = variables::getInstance()->nameArr[counter];
-//            varObj *v = variables::getInstance()->simMap[sim_name];
-//            v->setVal(atof(s.c_str()));
-//            variables::getInstance()->simMap[sim_name] = v;
             counter++;
             s = "";
 
         }
     }
     if (s!="") {
-        float value = atof(s.c_str());
+        float value = stof(s.c_str());
         variables::getInstance()->setVarBySim(variables::getInstance()->nameArr[counter], value);
-//        sim_name = variables::getInstance()->nameArr[counter];
-//        unordered_map<string, varObj*> m = variables::getInstance()->simMap;
-//        varObj *v = variables::getInstance()->simMap[sim_name];
-//        v->setVal(atof(s.c_str()));
-//        variables::getInstance()->simMap[sim_name] = v;
+        //cout << "rpm: " << endl;
+        //cout << s + ", " + to_string(value);
         s = "";
+        //cout<<variables::getInstance()->getValueByName("rpm")<<endl;
 
     }
-   // unordered_map<string, varObj*> simMapUpdate = variables::getInstance()->simMap;
 
 }
-
-//void server::dataToMap(char* data) {
-//    unordered_map<string, varStruct> nameMap = variables::getInstance()->getNameMap();
-//    unordered_map<string, varStruct*> simMap = variables::getInstance()->getSimMap();
-//    string s = "";
-//    int i;
-//    int counter = 0;
-//    string sim_name;
-//    size_t index1 = string(data).find("\n");
-//    string word1=string(data);
-//    string word2=word1.substr(index1 + 1,word1.length());
-//    size_t index2=word2.find("\n");
-//    //only one \n
-//    if (word2 == ""){
-//        word1=word1.substr(0,index1);
-//    }
-//    else{
-//        word1=word2.substr(0, index2);
-//    }
-//    ////// CHECK /n take only between 2 \n!!!!!!!!!!
-//    cout<<word1<<endl;
-//    for (i = 0; i < word1.size(); i++) {
-//        if (data[i] != ',') {
-//            s += word1[i];
-//        } else {
-//            // if(counter<=35) {
-//            cout << s << endl;
-//            sim_name = variables::getInstance()->nameArr[counter];
-//            //cout << variables::getInstance()->getVarFromSim(name)->sim << endl;
-//            varStruct *v = variables::getInstance()->getVarFromSim(sim_name);
-//            v->value = stof(s.c_str());
-//            variables::getInstance()->setVarInSimMap(sim_name, *v);
-//            counter++;
-//            //cout << s <<endl;
-//            s = "";
-//            // }
-//        }
-//    }
-//    sim_name = variables::getInstance()->nameArr[counter];
-//    varStruct *v = variables::getInstance()->getVarFromSim(sim_name);
-//    v->value = stof(s.c_str());
-//    variables::getInstance()->setVarInSimMap(sim_name, *v);
-//}
 
 
 

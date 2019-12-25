@@ -1,23 +1,18 @@
 #include <iostream>
-#include "lexer.cpp"
-#include "parser.h"
 #include "variables.h"
+#include "parser.h"
+#include "lexer.cpp"
 #include "keepThreads.h"
-
-
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <iostream>
-#include <unistd.h>
-#include <arpa/inet.h>
-#include <thread>
 #include <string>
-#include <cstring>
-
+#include "Interpreter.h"
 
 int main() {
-
     variables::getInstance();
+//    string s="alt=-372.033875";
+//
+//    Interpreter *i = new Interpreter();
+//    i->setVariables(s);
+//    Expression *e=i->interpret("alt");
     std::cout << "Hello, World!" << std::endl;
     cout<<"noaooaoaooaoaoooaoa"<<endl;
     lexer l;

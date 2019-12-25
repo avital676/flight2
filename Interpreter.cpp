@@ -2,6 +2,7 @@
 #include "ex1.h"
 #include "Interpreter.h"
 #include <regex>
+#include <iostream>
 
 using namespace std;
 
@@ -184,6 +185,7 @@ Expression *Interpreter::makeExp() {
 }
 
 void Interpreter::setVariables(string str) {
+    cout<< "inside "<<endl;
     // split string:
     string segment;
     vector<string> v;
@@ -213,8 +215,9 @@ void Interpreter::setVariables(string str) {
         if(!regex_match(name,regName))
             throw "Exception: invalid variable";
         // check val:
-        if ((!isdigit(val[0])) || (!isdigit(val.back())))
-            throw "Exception: invalid variable";
+        //error
+//        if ((!isdigit(val[0])) || (!isdigit(val.back())))
+//            throw "Exception: invalid variable";
         regex regVal("^(-?)(0|([1-9][0-9]*))(\\.[0-9]+)?$");
         if(!regex_match(val,regVal))
             throw "Exception: invalid variable";

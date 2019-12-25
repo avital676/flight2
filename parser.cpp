@@ -31,17 +31,15 @@ void parser::parse() {
     int i = 0;
     command* c;
     while (i < token.size()) {
-        //unordered_map<string, varObj*> m =variables::getInstance()->nameMap;
         unordered_map<string, varObj*> m =variables::getInstance()->getNameMap();
-        //unordered_map<string, varObj*> simMap =variables::getInstance()->simMap;
+        cout<<"parser     :";
+        cout<<token[i]<<endl;
         if (comMap.find(token[i]) != comMap.end()) {
             c = comMap[token[i]];
             i += c->execute(i, token);
+            cout<<i<<endl;
         } else if (m.find(token[i]) != m.end()) {
             i+=comMap["var"] -> execute(i, token);
-//            varStruct var = variables::getInstance()->getVar(token[i]);
-//            var.value = c->express(token[i + 2]);
-//            variables::getInstance()->setVarInMap(token[i], var);
         } else {
             c = new DefineVarCommand;
             i += c->execute(i, token);

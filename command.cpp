@@ -32,23 +32,20 @@ void acceptFromSimu(int client_socket) {
 
 void sendToSimu(int client_socket) {
     while(keepThreads::getInstance()->is_open) {
-        queue<varObj> q = variables::getInstance()->q;
-        if(q.empty()) {
+        vector<pair<string, float>> changedVars = variables::getInstance()->getChangedVars();
+        if(changedVars.empty()) {
             sleep(0.1);
         } else {
-            while (!q.empty()) {
-                string s = "set " + q.front().getSim() + " " + to_string(q.front().getVal()) + "\r\n";
-                //cout << s << endl;
+            for (int i = 0; i < changedVars.size(); i++) {
+                pair<string, float> p = changedVars[i];
+                string s = "set " + p.first + " " + to_string(p.second) + "\r\n";
                 const char *msg = s.c_str();
                 int is_sent = send(client_socket, msg, strlen(msg), 0);
                 if (is_sent == -1) {
                     cerr << "error sending message" << endl;
                 }
-                q.pop();
-
                 char buffer[1024] = {0};
                 int valread = read( client_socket , buffer, 1024);
-                std::cout<<buffer<<std::endl;
             }
         }
     }
@@ -140,7 +137,6 @@ int ConnectCommand::execute(int i, vector<string> v) {
 }
 
 int DefineVarCommand::execute(int i, vector<string> v) {
-    //cout << "define var execute" << endl;
     varObj* var;
     string varName;
     // define new var:
@@ -148,48 +144,21 @@ int DefineVarCommand::execute(int i, vector<string> v) {
         varName = v[i + 1];
         if (v[i + 2] == "->") {
             variables::getInstance()->addVar(v[i + 1], v[i + 4], 0, true);
-            //string sim = v[i + 4];
-            //var = variables::getInstance()->searchSim(sim);
-            //if(var->getSim()==""){
-            //    var = new varObj();
-            //}
-            //var->setSim(v[i + 4]);
-            //var->setF(true);
             numOfPar = 4;
         } else if (v[i + 2] == "<-") {
             variables::getInstance()->addVar(v[i + 1], v[i + 4], 0, false);
-            // search sim in simMap:
-            //string sim = v[i + 4];
-            //var = variables::getInstance()->searchSim(sim);
-            //var->setF(false);
             numOfPar = 4;
         } else if (v[i + 2] == "=") {
             float value = express(v[i + 3]);
-            variables::getInstance()->addVar(v[i + 1], 0, value, false);
-            //var->setVal(express(v[i + 3]));
+            cout<<value;
+            cout<< "   <-   value of = "<<endl;
+            variables::getInstance()->addVar(v[i + 1], "", value, false);
             numOfPar = 3;
         }
-        //variables::getInstance()->nameMap[varName] = var;
     } else { // var already defined:
         float value = express(v[i + 2]);
         variables::getInstance()->setVarByName(v[i], value);
-        //var = variables::getInstance()->getVarFromName(v[i]);
-        //float t = express(v[i+2]);
-        //cout<<t<<endl;
-        //var = variables::getInstance()->nameMap[varName];
-        //var->setVal(t);
-        //cout<<var->getVal()<<endl;
-        //variables::getInstance()->nameMap[varName] = var;
-        //if (var->getF()) {
-        //    variables::getInstance()->searchSim(var->getSim())->setVal(t);
-        //}
-        //variables::getInstance()->nameMap.insert({varName,var});
-        //cout<<variables::getInstance()->getVarFromName(varName)->getVal()<<endl;
-        //variables::getInstance()->setVarInNameMap(varName, *var);
         numOfPar = 2;
-        //if (var->getF()) {
-        //    variables::getInstance()->q.push(*var);
-        //}
     }
     return numOfPar + 1;
 }
@@ -210,7 +179,9 @@ ConditionParser::ConditionParser(string loop){
 }
 
 int ConditionParser::execute(int i, vector<string> v ) {
-    return com.execute(i,v);
+    int index = com.execute(i,v);
+    cout<<"confition Parser execute"<<endl;
+    return index;
 }
 
 int ifCommand::execute(int i, vector<string> v) {
@@ -283,84 +254,114 @@ int ifCommand::execute(int i, vector<string> v) {
 }
 
 int loopCommand::execute(int i, vector<string> v ) {
-    int index = i;
+    numOfPar=0;
+    int start = i;
+    int index = 0;
+    cout<<" i befoure while -"+to_string(i)<<endl;
     index = checkStatus(i,v, index);
+  //  cout<<"2 i befoure while -"+to_string(i)<<endl;
+    numOfPar = 0;
     vector<string> newVector;
     int countPare=0;
     //make new vector for parser.
-    while ((v[index] != "}")||(countPare!=0)){
-//        if (v[index] == "{") {
-//            countPare++;
-//        }
-//        if (v[index] == "}"){
-//            countPare--;
-//        }
-        newVector.push_back(v[index]);
-        index++;
+  //  cout<<"3 i befoure while -"+to_string(i)<<endl;
+    i=i+index;
+    while ((v[i] != "}")){
+        newVector.push_back(v[i]);
+        i++;
+        numOfPar++;
     }
+    cout<<"i after while - "+ to_string(i)<<endl;
+    cout<<"num of par - "+ to_string(numOfPar)<<endl;
+    parser *p = new parser(newVector);
 
     while (status){
         // do the condition in loop
-        cout<<"loop"<<endl;
-        parser *p = new parser(newVector);
+        //cout<<"loop"<<endl;
         p->parse();
         status= false;
-        checkStatus(i, v, index);
+        checkStatus(start, v, index);
     }
     // return the next place after }.
-    return index+1;
+  //  cout<<"after while"<<endl;
+    //cout<<v[index+1]<<endl;
+    //cout<<index<<endl;
+    return numOfPar + 1+ index;
 
 }
 
 int loopCommand::checkStatus(int i, vector<string> v, int index){
     // while break{...}
+    cout<<"check status"<<endl;
+    bool enter=false;
     if (v[i+2]=="{"){
         double v1 = express(v[i+1]);
         if (v1>0){
+            enter=true;
             status= true;
-            index=i+3;
+            index=3;
         }
     }
-    double v1= express(v[i+1]);
-    double v2= express(v[i+3]);
+    double v1 = express(v[i+1]);
+    cout<<v1;
+    cout<<"->  right"<<endl;
+    double v2 = express(v[i+3]);
+    cout<<v2;
+    cout<<"->  left"<<endl;
     //while breaks == exp{...}
     if (v[i+4] == "{"){
-        index=i+5;
+        index=5;
         if (v[i+2] == "=="){
             if (v1 == v2){
                 status= true;
+                enter=true;
+
             }
         }
         if (v[i+2] == ">="){
             if (v1 >= v2){
                 status= true;
+                enter=true;
+
             }
         }
         if (v[i+2] == "<="){
-            if (v1<= v2){
+            if (v1 <= v2){
                 status= true;
+                enter=true;
+
             }
         }
         if (v[i+2] == "!="){
             if (v1!=v2){
                 status= true;
+                enter=true;
+
             }
         }
         if (v[i+2] == ">"){
             if (v1 >v2){
                 status= true;
+                enter=true;
+
             }
         }
         if (v[i+2] == "<"){
             if (v1 <v2 ){
                 status= true;
+                enter=true;
+
             }
         }
+    }
+    if (enter== false){
+        status= false;
     }
     return index;
 }
 
 double command::express(string s){
+    cout<<"start express"<<endl;
 Interpreter *i = new Interpreter();
 string allVars="";
 string var="";
@@ -372,20 +373,36 @@ for (int i =0; i < s.length(); i++){
             var += s[i];
         }
         if((s[i]=='+')||(s[i]=='*')||(s[i]=='-')||(s[i]=='/')){
+            cout<<var;
+            cout<<"  var"<<endl;
             float value = variables::getInstance()->getValueByName(var);
+            cout<<value<<endl;
             allVars+=var+"="+ to_string(value)+";";
             var="";
         }
     }
     if (var!=""){
+        cout<<var;
+        cout<<"  var"<<endl;
         float value = variables::getInstance()->getValueByName(var);
-        allVars+=var+"="+ to_string(value)+";";
+        cout<<value;
+        cout<<"   value"<<endl;
+        if (value<0){
+            allVars+=var+"="+""+to_string(value)+";";
+
+        }
+        else{
+            allVars+=var+"="+ to_string(value)+";";
+        }
+        cout<<allVars<<endl;
     }
 
     if (allVars!=""){
         i->setVariables(allVars);
     }
+    cout<<allVars<<endl;
     Expression *e=i->interpret(s);
+    cout<<"end express"<<endl;
     return e->calculate();
 }
 
