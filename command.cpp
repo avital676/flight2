@@ -304,6 +304,7 @@ int loopCommand::execute(int i, vector<string> v ) {
         cout<<"loop"<<endl;
         parser *p = new parser(newVector);
         p->parse();
+        status= false;
         checkStatus(i, v, index);
     }
     // return the next place after }.
