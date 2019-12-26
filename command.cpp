@@ -415,15 +415,29 @@ for (int i =0; i < s.length(); i++){
 
 command::command() {}
 
+//int PrintCommand::execute(int i, vector<string> v) {
+//    if (v[i + 1][0] == '"') {
+//        string strToPrint = v[i + 1].substr(1,v[i + 1].size() - 1);
+//        strToPrint.pop_back();
+//        cout << strToPrint << endl;
+//    } else {
+//        cout << express(v[i + 1]) << endl;
+//    }
+//    numOfPar = 1;
+//    return numOfPar + 1;
+//}
+
 int PrintCommand::execute(int i, vector<string> v) {
     unordered_map<string, varObj*> m =variables::getInstance()->getNameMap();
     if (m.find(v[i + 1]) != m.end()) {
         float value = m[v[i+1]]->getVal();
         cout<<value<<endl;
     } else {
+        //string strToPrint = v[i + 1].substr(1,v[i + 1].size() - 1);
+        //strToPrint.pop_back();
+        //cout << strToPrint << endl;
         cout << v[i + 1] << endl;
     }
-
     numOfPar = 1;
     return numOfPar + 1;
 }
