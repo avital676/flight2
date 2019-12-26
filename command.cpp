@@ -20,7 +20,7 @@
 void acceptFromSimu(int client_socket) {
     cout << "waiting to read from simu" << endl;
     server ser = new server();
-    // reading from client:
+    //reading from client
     char buffer[1024] = {0};
     int valread;
     while (keepThreads::getInstance()->is_open) {
@@ -54,14 +54,14 @@ void sendToSimu(int client_socket) {
 
 int openSer(int port) {
     sleep(10);
-    // create socket:
+    //create socket
     int socketfd = socket(AF_INET, SOCK_STREAM, 0);
     if (socketfd == -1) {
         //error
         std::cerr << "Could not create a socket"<<std::endl;
         return -1;
     }
-    sockaddr_in address;
+    sockaddr_in address; //in means IP4
     address.sin_family = AF_INET;
     address.sin_addr.s_addr = INADDR_ANY;
     address.sin_port = htons(port);
@@ -70,6 +70,7 @@ int openSer(int port) {
         std::cerr<<"Could not bind the socket to an IP"<<std::endl;
         return -2;
     }
+
     if (listen(socketfd, 5) == -1) {
         std::cerr<<"Error during listening command"<<std::endl;
         return -3;
@@ -81,14 +82,18 @@ int openSer(int port) {
     // accepting a client
     int client_socket = accept(socketfd, (struct sockaddr *)&address,
                                (socklen_t*)&address);
+
     if (client_socket == -1) {
         std::cerr<<"Error accepting client"<<std::endl;
         return -4;
     }
+
     close(socketfd);
+
     keepThreads::getInstance()->serverTread = thread(acceptFromSimu, client_socket);
     return 0;
 }
+
 
 int openCli(int port, string ip) {
     int client_socket = socket(AF_INET, SOCK_STREAM, 0);
@@ -132,6 +137,7 @@ int ConnectCommand::execute(int i, vector<string> v) {
 }
 
 int DefineVarCommand::execute(int i, vector<string> v) {
+    varObj* var;
     string varName;
     // define new var:
     if (v[i] == "var") {
@@ -143,14 +149,15 @@ int DefineVarCommand::execute(int i, vector<string> v) {
             variables::getInstance()->addVar(v[i + 1], v[i + 4], 0, false);
             numOfPar = 4;
         } else if (v[i + 2] == "=") {
+            //cout<<v[i+1]<<endl;
+            //cout<<v[i+3]<<endl;
             float value = express(v[i + 3]);
+
             variables::getInstance()->addVar(v[i + 1], "", value, false);
             numOfPar = 3;
         }
     } else { // var already defined:
         float value = express(v[i + 2]);
-        cout << "define var =  ";
-        cout << to_string(value) << endl;
         variables::getInstance()->setVarByName(v[i], value);
         numOfPar = 2;
     }
@@ -355,61 +362,68 @@ int loopCommand::checkStatus(int i, vector<string> v, int index){
 }
 
 double command::express(string s){
-    Interpreter *i = new Interpreter();
-    string allVars="";
-    string var="";
-    string flag;
+
+Interpreter *i = new Interpreter();
+string allVars="";
+string var="";
+string flag;
     s.erase(remove(s.begin(), s.end(), ' '), s.end());
 
-    for (int i =0; i < s.length(); i++){
+for (int i =0; i < s.length(); i++){
         //find variables
         if ((s[i]<='z')&&(s[i]>='a')) {
             while((i<s.length())&&(s[i]!='+')&&(s[i]!='-')&&(s[i]!='*')&&(s[i]!='/')&&(s[i]!=')')&&(s[i]!='(')) {
                 var += s[i];
+
                 i++;
+
             }
         }
+        //cout<<var<<endl;
         if((s[i]=='+')||(s[i]=='*')||(s[i]=='-')||(s[i]=='/')){
             if (var!="") {
+
+
                 float value = variables::getInstance()->getValueByName(var);
+
                 allVars += var + "=" + to_string(value) + ";";
                 var = "";
             }
         }
     }
     if (var!=""){
+
         float value = variables::getInstance()->getValueByName(var);
+
         if (value<0){
             allVars+=var+"="+""+to_string(value)+";";
+
         }
         else{
             allVars+=var+"="+ to_string(value)+";";
         }
     }
+
     if (allVars!=""){
         i->setVariables(allVars);
     }
+
     Expression *e=i->interpret(s);
+
     return e->calculate();
 }
 
 command::command() {}
 
 int PrintCommand::execute(int i, vector<string> v) {
-    if (v[i + 1][0] == '"') {
-        string strToPrint = v[i + 1].substr(1,v[i + 1].size() - 1);
-        strToPrint.pop_back();
-        cout << strToPrint << endl;
+    unordered_map<string, varObj*> m =variables::getInstance()->getNameMap();
+    if (m.find(v[i + 1]) != m.end()) {
+        float value = m[v[i+1]]->getVal();
+        cout<<value<<endl;
     } else {
-        cout << express(v[i + 1]) << endl;
+        cout << v[i + 1] << endl;
     }
-//    unordered_map<string, varObj*> m =variables::getInstance()->getNameMap();
-//    if (m.find(v[i + 1]) != m.end()) {
-//        float value = m[v[i+1]]->getVal();
-//        cout<<value<<endl;
-//    } else {
-//        cout << v[i + 1] << endl;
-//    }
+
     numOfPar = 1;
     return numOfPar + 1;
 }
@@ -419,7 +433,6 @@ int SleepCommand::execute(int i, vector<string> v) {
     numOfPar = 1;
     return numOfPar + 1;
 }
-
 string command::spaceDelete(string input){
     string output ="";
     for (int i=0; i<input.length(); i++){
