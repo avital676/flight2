@@ -32,12 +32,12 @@ void parser::parse() {
     command* c;
     while (i < token.size()) {
         unordered_map<string, varObj*> m =variables::getInstance()->getNameMap();
-        cout<<"parser     :";
-        cout<<token[i]<<endl;
+       // cout<<"parser     :";
+     //   cout<<token[i]<<endl;
         if (comMap.find(token[i]) != comMap.end()) {
             c = comMap[token[i]];
             i += c->execute(i, token);
-            cout<<i<<endl;
+       //     cout<<i<<endl;
         } else if (m.find(token[i]) != m.end()) {
             i+=comMap["var"] -> execute(i, token);
         } else {

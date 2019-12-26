@@ -185,8 +185,8 @@ Expression *Interpreter::makeExp() {
 }
 
 void Interpreter::setVariables(string str) {
-    cout<< "inside "<<endl;
-    cout<<str<<endl;
+ //   cout<< "inside "<<endl;
+ //   cout<<str<<endl;
     // split string:
     string segment;
     vector<string> v;
@@ -224,6 +224,6 @@ void Interpreter::setVariables(string str) {
             throw "Exception: invalid variable";
         // valid name and value:
         vMap[name] = stod(val);
-        cout<<"out"<<endl;
+     //   cout<<"out"<<endl;
     }
 }

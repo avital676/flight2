@@ -16,7 +16,7 @@
 #include "parser.h"
 #include "Interpreter.h"
 #include "keepThreads.h"
-
+#include <algorithm>
 void acceptFromSimu(int client_socket) {
     cout << "waiting to read from simu" << endl;
     server ser = new server();
@@ -149,6 +149,8 @@ int DefineVarCommand::execute(int i, vector<string> v) {
             variables::getInstance()->addVar(v[i + 1], v[i + 4], 0, false);
             numOfPar = 4;
         } else if (v[i + 2] == "=") {
+            cout<<v[i+1]<<endl;
+            cout<<v[i+3]<<endl;
             float value = express(v[i + 3]);
             cout<<value;
             cout<< "   <-   value of = "<<endl;
@@ -257,7 +259,7 @@ int loopCommand::execute(int i, vector<string> v ) {
     numOfPar=0;
     int start = i;
     int index = 0;
-    cout<<" i befoure while -"+to_string(i)<<endl;
+   // cout<<" i befoure while -"+to_string(i)<<endl;
     index = checkStatus(i,v, index);
   //  cout<<"2 i befoure while -"+to_string(i)<<endl;
     numOfPar = 0;
@@ -271,8 +273,8 @@ int loopCommand::execute(int i, vector<string> v ) {
         i++;
         numOfPar++;
     }
-    cout<<"i after while - "+ to_string(i)<<endl;
-    cout<<"num of par - "+ to_string(numOfPar)<<endl;
+  //  cout<<"i after while - "+ to_string(i)<<endl;
+  //  cout<<"num of par - "+ to_string(numOfPar)<<endl;
     parser *p = new parser(newVector);
 
     while (status){
@@ -292,7 +294,7 @@ int loopCommand::execute(int i, vector<string> v ) {
 
 int loopCommand::checkStatus(int i, vector<string> v, int index){
     // while break{...}
-    cout<<"check status"<<endl;
+   // cout<<"check status"<<endl;
     bool enter=false;
     if (v[i+2]=="{"){
         double v1 = express(v[i+1]);
@@ -303,11 +305,11 @@ int loopCommand::checkStatus(int i, vector<string> v, int index){
         }
     }
     double v1 = express(v[i+1]);
-    cout<<v1;
-    cout<<"->  right"<<endl;
+   // cout<<v1;
+  //  cout<<"->  right"<<endl;
     double v2 = express(v[i+3]);
-    cout<<v2;
-    cout<<"->  left"<<endl;
+   // cout<<v2;
+   // cout<<"->  left"<<endl;
     //while breaks == exp{...}
     if (v[i+4] == "{"){
         index=5;
@@ -362,36 +364,45 @@ int loopCommand::checkStatus(int i, vector<string> v, int index){
 
 double command::express(string s){
     cout<<"start express"<<endl;
+    cout<<s<<endl;
 Interpreter *i = new Interpreter();
 string allVars="";
 string var="";
 string flag;
-string str = spaceDelete(s);
-cout<<"delete space   ";
-cout<<str<<endl;
-for (int i =0; i < str.length(); i++){
+    s.erase(remove(s.begin(), s.end(), ' '), s.end());
+//string str = spaceDelete(s);
+//cout<<"delete space   ";
+//cout<<str<<endl;
+cout<<s<<endl;
+for (int i =0; i < s.length(); i++){
         //find variables
-        if ((str[i]<='z')&&(str[i]>='a')) {
-            var += str[i];
+        if ((s[i]<='z')&&(s[i]>='a')) {
+            while((i<s.length())&&(s[i]!='+')&&(s[i]!='-')&&(s[i]!='*')&&(s[i]!='/')&&(s[i]!=')')&&(s[i]!='(')) {
+                var += s[i];
+               // cout<<i<<endl;
+                i++;
+
+            }
         }
-        if((str[i]=='+')||(str[i]=='*')||(str[i]=='-')||(str[i]=='/')){
+        cout<<var<<endl;
+        if((s[i]=='+')||(s[i]=='*')||(s[i]=='-')||(s[i]=='/')){
             if (var!="") {
-                cout << var;
-                cout << "  var" << endl;
+               // cout << var;
+               // cout << "  var" << endl;
 
                 float value = variables::getInstance()->getValueByName(var);
-                cout << value << endl;
+               // cout << value << endl;
                 allVars += var + "=" + to_string(value) + ";";
                 var = "";
             }
         }
     }
     if (var!=""){
-        cout<<var;
-        cout<<"  var"<<endl;
+      //  cout<<var;
+       // cout<<"  var"<<endl;
         float value = variables::getInstance()->getValueByName(var);
-        cout<<value;
-        cout<<"   value"<<endl;
+      //  cout<<value;
+     //   cout<<"   value"<<endl;
         if (value<0){
             allVars+=var+"="+""+to_string(value)+";";
 
@@ -399,14 +410,15 @@ for (int i =0; i < str.length(); i++){
         else{
             allVars+=var+"="+ to_string(value)+";";
         }
-        cout<<allVars<<endl;
+      //  cout<<allVars<<endl;
     }
 
     if (allVars!=""){
         i->setVariables(allVars);
     }
-    cout<<allVars<<endl;
-    Expression *e=i->interpret(str);
+    cout<<"all vars   ->";
+   cout<<allVars<<endl;
+    Expression *e=i->interpret(s);
     cout<<"end express"<<endl;
     return e->calculate();
 }

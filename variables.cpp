@@ -3,6 +3,10 @@
 //
 
 #include "variables.h"
+#include <string>
+#include <iostream>
+#include "string.h"
+using namespace std;
 
 variables* variables::instance = 0;
 
@@ -19,6 +23,13 @@ variables* variables::getInstance() {
 }
 
 void variables::addVar(string name, string s, float value, bool f) {
+//    cout<<"start add var"<<endl;
+//    cout<<"name -  ";
+//    cout<<name<<endl;
+//    cout<<"sim -  ";
+//    cout<<s<<endl;
+//    cout<<"value -  ";
+  //  cout<<value<<endl;
     mutex_lock.lock();
     varObj* v = new varObj();
     v->setSim(s);
@@ -27,6 +38,7 @@ void variables::addVar(string name, string s, float value, bool f) {
     nameMap[name] = v;
     simMap[s] = v;
     mutex_lock.unlock();
+//    cout<<"stop add var"<<endl;
 }
 
 void variables::setVarByName(string name, float value) {
