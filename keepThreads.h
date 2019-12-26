@@ -23,7 +23,4 @@ public:
 
     };
 
-
-
-
 #endif //FLIGHT2_KEEPTHREADS_H

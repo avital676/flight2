@@ -19,7 +19,6 @@ public:
     server(){};
     server(bool work);
     void dataToMap(char* data);
-    //void setSock(int socketfd, sockaddr_in address);
     //void readFromSimu();
 };
 #endif //FLIGHT1_SERVER_H

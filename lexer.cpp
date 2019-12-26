@@ -59,7 +59,7 @@ public:
                     j = -1;
                     i++;
                     word = "";
-                }else {
+                } else {
                     if ((linesVector[i][j] == '(') || (linesVector[i][j] == ')')) {
                         token.push_back(word);
                         int k = linesVector[i].length();
@@ -75,7 +75,10 @@ public:
                             }
                         }
                         if (word[0]=='"'){
-                            word = sub_last_tub(word, 1, word.length()-1);
+                            int size = token.size();
+                            if (token[size-1]!="Print") {
+                                word = sub_last_tub(word, 1, word.length() - 1);
+                            }
                         }
                         token.push_back(word);
 

@@ -14,6 +14,7 @@ using namespace std;
 server::server(bool do_work) {
     work = do_work;
 }
+
 void server::dataToMap(char* data) {
     string s = "";
     int i;
@@ -48,7 +49,6 @@ void server::dataToMap(char* data) {
             variables::getInstance()->setVarBySim(variables::getInstance()->nameArr[counter], value);
             counter++;
             s = "";
-
         }
     }
     if (s!="") {
