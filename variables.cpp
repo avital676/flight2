@@ -4,6 +4,7 @@
 
 #include "variables.h"
 #include <string>
+#include <iostream>
 
 using namespace std;
 
@@ -22,13 +23,6 @@ variables* variables::getInstance() {
 }
 
 void variables::addVar(string name, string s, float value, bool f) {
-//    cout<<"start add var"<<endl;
-//    cout<<"name -  ";
-//    cout<<name<<endl;
-//    cout<<"sim -  ";
-//    cout<<s<<endl;
-//    cout<<"value -  ";
-  //  cout<<value<<endl;
     mutex_lock.lock();
     varObj* v = new varObj();
     v->setSim(s);
@@ -37,14 +31,21 @@ void variables::addVar(string name, string s, float value, bool f) {
     nameMap[name] = v;
     simMap[s] = v;
     mutex_lock.unlock();
-//    cout<<"stop add var"<<endl;
 }
 
 void variables::setVarByName(string name, float value) {
     mutex_lock.lock();
+//    if (name =="aileron"){
+//        cout<<value;
+//        cout<<" value from set"<<endl;
+//    }
     if(nameMap.find(name) != nameMap.end()) {
         nameMap.find(name)->second->setVal(value);
     }
+//    if (name =="aileron"){
+//        cout<<getValueByName("aileron");
+//        cout<<" value from set"<<endl;
+//    }
     varObj *v = nameMap.find(name)->second;
     q.push(*v);
     mutex_lock.unlock();
@@ -52,8 +53,14 @@ void variables::setVarByName(string name, float value) {
 
 void variables::setVarBySim(string sim, float value) {
     mutex_lock.lock();
+//    if (sim == "/instrumentation/heading-indicator/offset-deg") {
+//        cout<<sim<<endl;
+//        cout<<value<<endl;
+//    }
     if(simMap.find(sim) != simMap.end()) {
+        //cout << simMap.find(sim)->second->getVal() << endl;
         simMap.find(sim)->second->setVal(value);
+        //cout << simMap.find(sim)->second->getVal() << endl;
     }
     mutex_lock.unlock();
 }
@@ -62,9 +69,7 @@ float variables::getValueByName(string name) {
     return nameMap[name]->getVal();
 }
 
-bool variables::getFbyName(string name) {
-    return nameMap[name]->getF();
-}
+
 
 unordered_map<string,varObj*> variables::getNameMap() {
     return nameMap;

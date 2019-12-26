@@ -20,7 +20,7 @@ public:
     command();
     int numOfPar;
     virtual int execute(int, vector<string>){} ;
-    double express(string s);
+    float express(string s);
     string spaceDelete(string input);
 
 };

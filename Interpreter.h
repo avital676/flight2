@@ -15,7 +15,7 @@ class Interpreter {
 private:
     queue<string> postfix; // postfix string queue
     map<string, int> preMap; // precedence map
-    map<string, double> vMap; // variables map
+    map<string, float> vMap; // variables map
 public:
     Interpreter();
     Expression* interpret(string);

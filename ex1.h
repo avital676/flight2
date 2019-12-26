@@ -11,26 +11,26 @@ using namespace std;
 // Value class:
 class Value: public Expression {
 private:
-    double val;
+    float val;
 public:
     Value(double);
-    double calculate() override;
+    float calculate() override;
 };
 
 // Variable class:
 class Variable: public Expression {
 private:
     string name;
-    double value;
+    float value;
 public:
-    Variable(string, double);
+    Variable(string, float);
     Variable& operator++();
     Variable& operator--();
-    Variable& operator+=(double);
-    Variable& operator-=(double);
+    Variable& operator+=(float);
+    Variable& operator-=(float);
     Variable& operator++(int);
     Variable& operator--(int);
-    double calculate() override;
+    float calculate() override;
 };
 
 // BinaryOperator Interface:
@@ -47,28 +47,28 @@ public:
 class Plus: public BinaryOperator {
 public:
     Plus(Expression *left, Expression *right);
-    double calculate() override;
+    float calculate() override;
 };
 
 // Minus class:
 class Minus: public BinaryOperator {
 public:
     Minus(Expression *left, Expression *right);
-    double calculate() override;
+    float calculate() override;
 };
 
 // Mul class:
 class Mul: public BinaryOperator {
 public:
     Mul(Expression *left, Expression *right);
-    double calculate() override;
+    float calculate() override;
 };
 
 // Div class:
 class Div: public BinaryOperator {
 public:
     Div(Expression *left, Expression *right);
-    double calculate() override;
+    float calculate() override;
 };
 
 // UnaryOperator interface:
@@ -84,14 +84,14 @@ public:
 class UPlus: public UnaryOperator {
 public:
     UPlus(Expression*);
-    double calculate() override;
+    float calculate() override;
 };
 
 // UMinus class:
 class UMinus: public UnaryOperator {
 public:
     UMinus(Expression*);
-    double calculate();
+    float calculate();
 };
 
 

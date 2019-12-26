@@ -31,21 +31,21 @@ public:
                 size_t found = word.find("+=");
                 size_t found2 = word.find("-=");
                 if ((found != string::npos)) {
-                        string sub = word.substr(0, found);
-                        token.push_back(sub);
-                        sub = word[found];
-                        sub +=word[found + 1];
-                        token.push_back(sub);
-                        sub = linesVector[i].substr(j, linesVector[i].length());
-                        if (sub[0]==' '){
-                            sub=sub.substr(1, sub.length());
-                        }
-                        token.push_back(sub);
-                        j = -1;
-                        i++;
-                        word = "";
+                    string sub = word.substr(0, found);
+                    token.push_back(sub);
+                    sub = word[found];
+                    sub +=word[found + 1];
+                    token.push_back(sub);
+                    sub = linesVector[i].substr(j, linesVector[i].length());
+                    if (sub[0]==' '){
+                        sub=sub.substr(1, sub.length());
                     }
-                   else if ((found2 != string::npos)) {
+                    token.push_back(sub);
+                    j = -1;
+                    i++;
+                    word = "";
+                }
+                else if ((found2 != string::npos)) {
                     string sub = word.substr(0, found2);
                     token.push_back(sub);
                     sub = word[found2];
@@ -63,8 +63,16 @@ public:
                     if ((linesVector[i][j] == '(') || (linesVector[i][j] == ')')) {
                         token.push_back(word);
                         int k = linesVector[i].length();
-                       // string word2 = linesVector[i]
-                        word=sub_last_tub(linesVector[i], j+1, linesVector[i].length()-1);
+                        // string word2 = linesVector[i]
+                        size_t found = linesVector[i].find("{");
+                        if (found != string::npos){
+                            word=sub_last_tub(linesVector[i], j+1, found-2);
+                            token.push_back(word);
+                            word=linesVector[i][found];
+                        }
+                        else {
+                            word = sub_last_tub(linesVector[i], j + 1, linesVector[i].length() - 1);
+                        }
                         for (int t = 0; t < word.length(); t++) {
                             if (word[t] == ',') {
                                 string subWord =sub_last_tub(word,1,t-1);
@@ -100,7 +108,7 @@ public:
                         } else {
                             //=
                             if ((linesVector[i][j] == '=')&&(linesVector[i][j-1]!='+')&&(linesVector[i][j-1]!='-')
-                            &&(linesVector[i][j-1]!='<')&&((linesVector[i][j-1]!='>'))&&(linesVector[i][j-1]!='!')&&(linesVector[i][j-1]!='=')&&(linesVector[i][j+1]!='=')) {
+                                &&(linesVector[i][j-1]!='<')&&((linesVector[i][j-1]!='>'))&&(linesVector[i][j-1]!='!')&&(linesVector[i][j-1]!='=')&&(linesVector[i][j+1]!='=')) {
                                 token.push_back(word);
                                 word = linesVector[i][j];
                                 token.push_back(word);
@@ -121,7 +129,9 @@ public:
                                 token.push_back(word);
                                 word = "";
                             } else if (linesVector[i][j] == ' ') {
-                                token.push_back(word);
+                                if (word!="") {
+                                    token.push_back(word);
+                                }
                                 word = "";
                             } else if (linesVector[i][j] == ',') {
                                 token.push_back(word);
@@ -134,11 +144,10 @@ public:
                     }
                 }
             }
-            }
-
-        for (auto k = token.begin(); k != token.end(); ++k) {
-            if ((*k == "") || (*k == " ")||(*k=="\t")) {
-                token.erase(k);
+        }
+        for (int i=0; i<token.size(); i++){
+            if ((token[i]=="")||(token[i]==" ")||(token[i]=="\t")){
+                token.erase(token.begin()+i);
             }
         }
         for (int t = 0; t < token.size(); t++) {
