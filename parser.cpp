@@ -31,6 +31,10 @@ void parser::parse() {
     int i = 0;
     command* c;
     while (i < token.size()) {
+        if (token[i]==""){
+            cout<<"nasing"<<endl;
+            i++;
+        }
         unordered_map<string, varObj*> m =variables::getInstance()->getNameMap();
        // cout<<"parser     :";
      //   cout<<token[i]<<endl;

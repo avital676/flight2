@@ -10,14 +10,14 @@ using namespace std;
 class lexer {
 public:
 
-    vector<string> lex() {
+    vector<string> lex(const char* s) {
         string word = "";
         ifstream file;
         string line;
         vector <string> linesVector;
         vector <string> token;
 
-        freopen("text.txt", "rb", stdin);
+        freopen(s, "rb", stdin);
         while (getline(cin, line)) {
             linesVector.push_back(line);
 
@@ -97,7 +97,7 @@ public:
                         } else {
                             //=
                             if ((linesVector[i][j] == '=')&&(linesVector[i][j-1]!='+')&&(linesVector[i][j-1]!='-')
-                            &&(linesVector[i][j-1]!='<')&&((linesVector[i][j-1]!='>'))&&(linesVector[i][j-1]!='!')) {
+                            &&(linesVector[i][j-1]!='<')&&((linesVector[i][j-1]!='>'))&&(linesVector[i][j-1]!='!')&&(linesVector[i][j-1]!='=')&&(linesVector[i][j+1]!='=')) {
                                 token.push_back(word);
                                 word = linesVector[i][j];
                                 token.push_back(word);
@@ -134,12 +134,12 @@ public:
             }
 
         for (auto k = token.begin(); k != token.end(); ++k) {
-            if ((*k == "") || (*k == " ")) {
+            if ((*k == "") || (*k == " ")||(*k=="\t")) {
                 token.erase(k);
             }
         }
         for (int t = 0; t < token.size(); t++) {
-           // cout << token[t] << endl;
+            cout << token[t] << endl;
         }
 
         file.close();

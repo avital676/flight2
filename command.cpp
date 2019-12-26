@@ -149,11 +149,10 @@ int DefineVarCommand::execute(int i, vector<string> v) {
             variables::getInstance()->addVar(v[i + 1], v[i + 4], 0, false);
             numOfPar = 4;
         } else if (v[i + 2] == "=") {
-            cout<<v[i+1]<<endl;
-            cout<<v[i+3]<<endl;
+            //cout<<v[i+1]<<endl;
+            //cout<<v[i+3]<<endl;
             float value = express(v[i + 3]);
-            cout<<value;
-            cout<< "   <-   value of = "<<endl;
+
             variables::getInstance()->addVar(v[i + 1], "", value, false);
             numOfPar = 3;
         }
@@ -188,19 +187,22 @@ int ConditionParser::execute(int i, vector<string> v ) {
 
 int ifCommand::execute(int i, vector<string> v) {
     int index;
-    //if var  {...}
     if (v[i+2] == "{"){
         float value1 = variables::getInstance()->getValueByName(v[i + 1]);
         if (value1 > 0){
             status= true;
-            index=i+3;
+            index=3;
         }
     }
+    //cout<<v[i+1]<<endl;
     double v1= express(v[i+1]);
+   // cout<<v1<<endl;
+   // cout<<v[i+3]<<endl;
     double v2= express(v[i+3]);
+   // cout<<v2<<endl;
     //if var == exp  {...}
     if (v[i+4] == "{"){
-        index=i+5;
+        index=5;
         if (v[i+2] == "=="){
             if (v1 == v2){
                 status= true;
@@ -232,25 +234,22 @@ int ifCommand::execute(int i, vector<string> v) {
             }
         }
     }
+    //cout<<status<<endl;
     vector<string> newVector;
     //make new vector for parser.
     int countPare=0;
-    while ((v[index] != "}")||(countPare!=0)){
-        if (v[index] == "{") {
-            countPare++;
-        }
-        if (v[index] == "}"){
-            countPare--;
-        }
-        newVector.push_back(v[index]);
+    while (v[i+index] != "}"){
+        newVector.push_back(v[i+index]);
         index++;
     }
+   // cout<<"if"<<endl;
     if (status){
         //do the condition in loop
         parser *p = new parser(newVector);
         p->parse();
     }
     //return the next place after }.
+    cout<<index+1<<endl;
     return index + 1;
 
 }
@@ -363,46 +362,39 @@ int loopCommand::checkStatus(int i, vector<string> v, int index){
 }
 
 double command::express(string s){
-    cout<<"start express"<<endl;
-    cout<<s<<endl;
+
 Interpreter *i = new Interpreter();
 string allVars="";
 string var="";
 string flag;
     s.erase(remove(s.begin(), s.end(), ' '), s.end());
-//string str = spaceDelete(s);
-//cout<<"delete space   ";
-//cout<<str<<endl;
-cout<<s<<endl;
+
 for (int i =0; i < s.length(); i++){
         //find variables
         if ((s[i]<='z')&&(s[i]>='a')) {
             while((i<s.length())&&(s[i]!='+')&&(s[i]!='-')&&(s[i]!='*')&&(s[i]!='/')&&(s[i]!=')')&&(s[i]!='(')) {
                 var += s[i];
-               // cout<<i<<endl;
+
                 i++;
 
             }
         }
-        cout<<var<<endl;
+        //cout<<var<<endl;
         if((s[i]=='+')||(s[i]=='*')||(s[i]=='-')||(s[i]=='/')){
             if (var!="") {
-               // cout << var;
-               // cout << "  var" << endl;
+
 
                 float value = variables::getInstance()->getValueByName(var);
-               // cout << value << endl;
+
                 allVars += var + "=" + to_string(value) + ";";
                 var = "";
             }
         }
     }
     if (var!=""){
-      //  cout<<var;
-       // cout<<"  var"<<endl;
+
         float value = variables::getInstance()->getValueByName(var);
-      //  cout<<value;
-     //   cout<<"   value"<<endl;
+
         if (value<0){
             allVars+=var+"="+""+to_string(value)+";";
 
@@ -410,16 +402,14 @@ for (int i =0; i < s.length(); i++){
         else{
             allVars+=var+"="+ to_string(value)+";";
         }
-      //  cout<<allVars<<endl;
     }
 
     if (allVars!=""){
         i->setVariables(allVars);
     }
-    cout<<"all vars   ->";
-   cout<<allVars<<endl;
+
     Expression *e=i->interpret(s);
-    cout<<"end express"<<endl;
+
     return e->calculate();
 }
 
