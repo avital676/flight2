@@ -158,6 +158,7 @@ int DefineVarCommand::execute(int i, vector<string> v) {
         }
     } else { // var already defined:
         float value = express(v[i + 2]);
+
         variables::getInstance()->setVarByName(v[i], value);
         numOfPar = 2;
     }
