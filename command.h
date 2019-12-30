@@ -1,3 +1,6 @@
+//
+// Created by noa on 12/12/2019.
+//
 
 #ifndef UNTITLED6_COMMAND_H
 #define UNTITLED6_COMMAND_H
@@ -5,41 +8,43 @@
 #include <map>
 #include <vector>
 
+
 using namespace std;
 
-// command class:
+
+
 class command {
+private:
+    void getMng(void (&mng)());
 public:
     command();
     int numOfPar;
-    virtual int execute(int, vector<string>){};
+    virtual int execute(int, vector<string>){} ;
     float express(string s);
+    string spaceDelete(string input);
     ~command(){};
+
 };
 
-// open server command class:
-class openServerCommand : public command {
+void openServer(string p, bool &open);
+
+class openServerCommand: public command {
 public:
     int numOfPar = 1;
+    //void openServer(string p, bool &open);
     int execute(int, vector<string>) override ;
     ~openServerCommand(){};
 };
 
-int openSer(int port);
-void acceptFromSimu(int client_socket);
-void dataToMap(char* data);
+int clientMng(string port, string ip);
 
-// connect command:
-class ConnectCommand : public command {
+class ConnectCommand : public command{
 public:
     int numOfPar = 2;
     int execute(int, vector<string>) override ;
     ~ConnectCommand(){};
 };
 
-int openCli(int port, string ip);
-
-// define var command:
 class DefineVarCommand : public command {
 public:
     int numOfPar = 2;
@@ -47,56 +52,52 @@ public:
     ~DefineVarCommand(){};
 };
 
-// condition parser:
-class ConditionParser: public command {
-private:
+class ConditionParser: public command{
     command com;
-protected:
-    bool status= false;
 public:
     ConditionParser(){};
     ConditionParser(string);
     void setCom(command a);
     int execute(int, vector<string>) override;
     ~ConditionParser(){};
-    int checkStatus(int i, vector<string> v, int index);
 
-};
+    };
 
-// if command:
 class ifCommand: public ConditionParser{
 public:
+    //int numOfPar = ;
+    bool status = false;
     ifCommand(){}
     int execute(int, vector<string>) override ;
     ~ifCommand(){};
+
 };
 
-// loop command:
 class loopCommand: public ConditionParser{
 public:
+    bool status = false;
+    int checkStatus(int i, vector<string> v, int index);
     int execute(int, vector<string>) override ;
     ~loopCommand(){};
 };
 
-// Print command:
 class PrintCommand: public command {
 public:
     int execute(int, vector<string>) override ;
     ~PrintCommand(){};
 };
 
-// Sleep command:
 class SleepCommand: public command {
 public:
     int execute(int, vector<string>) override ;
     ~SleepCommand(){};
 };
-
 class FuncCommand: public command {
 public:
     string value;
     FuncCommand(string s1);
     int execute(int, vector<string>) override ;
 };
+
 
 #endif //UNTITLED6_COMMAND_H

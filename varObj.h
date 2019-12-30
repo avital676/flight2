@@ -21,6 +21,7 @@ public:
     void setSim(string s);
     void setVal(float v);
     void setF(bool f);
+    ~varObj(){};
 };
 
 

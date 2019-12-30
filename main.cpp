@@ -4,19 +4,21 @@
 #include "lexer.cpp"
 #include "keepThreads.h"
 #include <string>
+#include "string.h"
 #include "Interpreter.h"
 #include <algorithm>
-
+using namespace std;
 int main(int argc, char *argv[]) {
-    int noa =0;
     variables::getInstance();
     lexer l;
     vector<string> v = l.lex(argv[1]);
     parser* p = new parser(v);
     keepThreads::getInstance()->is_open = true;
     p->parse();
+    delete p;
+    delete variables::getInstance();
+    keepThreads::getInstance()->is_open = false;
     keepThreads::getInstance()->serverTread.join();
     keepThreads::getInstance()->clientTread.join();
-    keepThreads::getInstance()->is_open = false;
     return 0;
 }

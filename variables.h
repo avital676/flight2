@@ -1,3 +1,6 @@
+//
+// Created by noa on 16/12/2019.
+//
 
 #ifndef FLIGHT1_VARIABLES_H
 #define FLIGHT1_VARIABLES_H
@@ -10,6 +13,12 @@
 
 using namespace std;
 
+//struct varStruct {
+//    float value;
+//    string sim;
+//    bool set;
+//};
+
 class variables {
 
 private:
@@ -19,8 +28,10 @@ private:
     unordered_map<string, varObj*> simMap;
     mutex mutex_lock;
     void initialize();
+
 public:
     unordered_map<string, vector <string> > funcMap;
+
     static variables *getInstance();
     string nameArr[36];
     queue<varObj> q;
@@ -30,6 +41,9 @@ public:
     float getValueByName(string name);
     unordered_map<string,varObj*> getNameMap();
     vector<pair<string, float>> getChangedVars();
+    float getValueBySimName(string simname);
+    ~variables();
 };
 
 #endif //FLIGHT1_VARIABLES_H
+
