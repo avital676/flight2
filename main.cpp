@@ -8,7 +8,7 @@
 #include <algorithm>
 
 int main(int argc, char *argv[]) {
-
+    int noa =0;
     variables::getInstance();
     lexer l;
     vector<string> v = l.lex(argv[1]);

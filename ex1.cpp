@@ -3,7 +3,7 @@
 #include "ex1.h"
 
 // Value:
-double Value::calculate() {
+float Value::calculate() {
     return this->val;
 }
 
@@ -22,12 +22,12 @@ Variable& Variable::operator--() {
     return *this;
 }
 
-Variable& Variable::operator+=(double num) {
+Variable& Variable::operator+=(float num) {
     this->value+=num;
     return *this;
 }
 
-Variable& Variable::operator-=(double num) {
+Variable& Variable::operator-=(float num) {
     this->value-=num;
     return *this;
 }
@@ -42,11 +42,11 @@ Variable& Variable::operator--(int) {
     return *this;
 }
 
-double Variable::calculate() {
+float Variable::calculate() {
     return this->value;
 }
 
-Variable::Variable(string str, double val) {
+Variable::Variable(string str, float val) {
     this->name = str;
     this->value = val;
 }
@@ -70,7 +70,7 @@ Plus::Plus(Expression *leftExp, Expression *rightExp) : BinaryOperator(left, rig
     right = rightExp;
 }
 
-double Plus::calculate() {
+float Plus::calculate() {
     return (this->left->calculate() + this->right->calculate());
 }
 
@@ -80,7 +80,7 @@ Minus::Minus(Expression *leftExp, Expression *rightExp) : BinaryOperator(left, r
     right = rightExp;
 }
 
-double Minus::calculate() {
+float Minus::calculate() {
     return (this->left->calculate() - this->right->calculate());
 }
 
@@ -90,7 +90,7 @@ Mul::Mul(Expression *leftExp, Expression *rightExp) : BinaryOperator(left, right
     right = rightExp;
 }
 
-double Mul::calculate() {
+float Mul::calculate() {
     return (this->left->calculate() * this->right->calculate());
 }
 
@@ -100,7 +100,7 @@ Div::Div(Expression *leftExp, Expression *rightExp) : BinaryOperator(left, right
     right = rightExp;
 }
 
-double Div::calculate() {
+float Div::calculate() {
     if (this->right->calculate() == 0)
         throw "Exception: can't divide by 0";
     return (this->left->calculate() / this->right->calculate());
@@ -121,7 +121,7 @@ UPlus::UPlus(Expression *e) : UnaryOperator(exp) {
     this->exp = e;
 }
 
-double UPlus::calculate() {
+float UPlus::calculate() {
     return this->exp->calculate();
 }
 
@@ -130,6 +130,6 @@ UMinus::UMinus(Expression *e) : UnaryOperator(exp) {
     this->exp = e;
 }
 
-double UMinus::calculate() {
+float UMinus::calculate() {
     return (-1) * this->exp->calculate();
 }

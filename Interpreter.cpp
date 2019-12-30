@@ -108,8 +108,8 @@ int Interpreter::getPre(string s) {
 }
 
 Expression* Interpreter::convertToVar(string name) {
-    double val;
-    map<string, double>::iterator iter;
+    float val;
+    map<string, float>::iterator iter;
     iter = vMap.find(name);
     if(iter != vMap.end())
         val = iter->second;
