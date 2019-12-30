@@ -30,6 +30,7 @@ private:
     void initialize();
 
 public:
+    unordered_map<string, vector <string> > funcMap;
 
     static variables *getInstance();
     string nameArr[36];

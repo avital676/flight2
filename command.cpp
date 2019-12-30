@@ -18,14 +18,13 @@
 #include "keepThreads.h"
 #include <algorithm>
 void acceptFromSimu(int client_socket) {
-    cout << "waiting to read from simu" << endl;
+  //  cout << "waiting to read from simu" << endl;
     server ser = new server();
     //reading from client
     char buffer[1024] = {0};
     int valread;
     while (keepThreads::getInstance()->is_open) {
         valread = read( client_socket , buffer, 1024);
-        //cout << "read" << endl;
         ser.dataToMap(buffer);
     }
 }
@@ -34,7 +33,6 @@ void sendToSimu(int client_socket) {
     while(keepThreads::getInstance()->is_open) {
         vector<pair<string, float>> changedVars = variables::getInstance()->getChangedVars();
         if(changedVars.empty()) {
-            sleep(0.1);
         } else {
             for (int i = 0; i < changedVars.size(); i++) {
                 pair<string, float> p = changedVars[i];
@@ -53,8 +51,7 @@ void sendToSimu(int client_socket) {
 }
 
 int openSer(int port) {
-    sleep(10);
-    //create socket
+
     int socketfd = socket(AF_INET, SOCK_STREAM, 0);
     if (socketfd == -1) {
         //error
@@ -75,9 +72,9 @@ int openSer(int port) {
         std::cerr<<"Error during listening command"<<std::endl;
         return -3;
     } else{
-        std::cout<<"Server is now listening ..."<<std::endl;
+      //  std::cout<<"Server is now listening ..."<<std::endl;
     }
-    cout << port << endl;
+  //  cout << port << endl;
     keepThreads::getInstance()->is_open = true;
     // accepting a client
     int client_socket = accept(socketfd, (struct sockaddr *)&address,
@@ -111,7 +108,7 @@ int openCli(int port, string ip) {
         cerr << "Could not connect to host server" << endl;
         return -2;
     } else { // client is connected
-        cout << "opened client" << endl;
+      //  cout << "opened client" << endl;
         keepThreads::getInstance()->clientTread = thread(sendToSimu, client_socket);
         keepThreads::getInstance()->clientTread.detach();
     }
@@ -119,7 +116,7 @@ int openCli(int port, string ip) {
 }
 
 int openServerCommand::execute(int i, vector<string> v) {
-    cout << "openserver execute" << endl;
+   // cout << "openserver execute" << endl;
     double calculate = express(v[i+1]);
     int port = (int)calculate;
     int opened = openSer(port);
@@ -130,11 +127,10 @@ int openServerCommand::execute(int i, vector<string> v) {
 }
 
 int ConnectCommand::execute(int i, vector<string> v) {
-    sleep(5);
     double calculate = express(v[i+2]);
     int port = (int)calculate;
     openCli(port, v[i + 1]);
-    cout << "client connected" << endl;
+  //  cout << "client connected" << endl;
     return numOfPar + 1;
 }
 
@@ -156,12 +152,6 @@ int DefineVarCommand::execute(int i, vector<string> v) {
         }
     } else { // var already defined:
         float value = express(v[i + 2]);
-//        if (v[i + 2] == "-roll / 70") {
-//            cout<<value;
-//            cout<<"   -value after express"<<endl;
-//        }
-        //cout << "in define var: " + v[i] + "= ";
-        //cout << value << endl;
         variables::getInstance()->setVarByName(v[i], value);
         numOfPar = 2;
     }
@@ -185,7 +175,7 @@ ConditionParser::ConditionParser(string loop){
 
 int ConditionParser::execute(int i, vector<string> v ) {
     int index = com.execute(i,v);
-    cout<<"confition Parser execute"<<endl;
+ //   cout<<"confition Parser execute"<<endl;
     return index;
 }
 
@@ -348,7 +338,7 @@ float command::express(string s){
     s.erase(remove(s.begin(), s.end(), ' '), s.end());
     for (int i =0; i < s.length(); i++){
         //find variables
-        if ((s[i]<='z')&&(s[i]>='a')) {
+        if ((s[i]<='z')&&(s[i]>='a')||(s[i]<='Z')&&(s[i]>='A')) {
             while((i<s.length())&&(s[i]!='+')&&(s[i]!='-')&&(s[i]!='*')&&(s[i]!='/')&&(s[i]!=')')&&(s[i]!='(')) {
                 var += s[i];
 
@@ -378,14 +368,7 @@ float command::express(string s){
         i->setVariables(allVars);
     }
     Expression *e=i->interpret(s);
-//    cout<<allVars<<endl;
-//    cout<<s<<endl;
-//    cout<<e->calculate()<<endl;
-//    if (s=="roll/70"){
-//        cout<<allVars;
-//        cout<<"   -all vars"<<endl;
-//    }
-//    cout<<e->calculate()<<endl;
+
     float result = e->calculate();
     return result;
 
@@ -393,17 +376,6 @@ float command::express(string s){
 
 command::command() {}
 
-//int PrintCommand::execute(int i, vector<string> v) {
-//    if (v[i + 1][0] == '"') {
-//        string strToPrint = v[i + 1].substr(1,v[i + 1].size() - 1);
-//        strToPrint.pop_back();
-//        cout << strToPrint << endl;
-//    } else {
-//        cout << express(v[i + 1]) << endl;
-//    }
-//    numOfPar = 1;
-//    return numOfPar + 1;
-//}v
 
 int PrintCommand::execute(int i, vector<string> v) {
     unordered_map<string, varObj*> m =variables::getInstance()->getNameMap();
@@ -411,10 +383,9 @@ int PrintCommand::execute(int i, vector<string> v) {
         float value = m[v[i+1]]->getVal();
         cout<<value<<endl;
     } else {
-        //string strToPrint = v[i + 1].substr(1,v[i + 1].size() - 1);
-        //strToPrint.pop_back();
-        //cout << strToPrint << endl;
-        cout << v[i + 1] << endl;
+        //cut the " "
+        string toPrint = v[i+1].substr(1, v[i+1].length()-2);
+        cout << toPrint << endl;
     }
     numOfPar = 1;
     return numOfPar + 1;
@@ -424,20 +395,44 @@ int SleepCommand::execute(int i, vector<string> v) {
     float timeToSleep = express(v[i+1]);
     chrono::milliseconds duration((int)timeToSleep);
     this_thread::sleep_for(duration);
-    //sleep(timeToSleep / 1000);
+
     numOfPar = 1;
     return numOfPar + 1;
 }
 
-string command::spaceDelete(string input){
-    string output ="";
-    for (int i=0; i<input.length(); i++){
-        if (input[i]==' '){
+string command::spaceDelete(string input) {
+    string output = "";
+    for (int i = 0; i < input.length(); i++) {
+        if (input[i] == ' ') {
             i++;
-        }
-        else{
-            output+=input[i];
+        } else {
+            output += input[i];
         }
     }
     return output;
 }
+
+FuncCommand::FuncCommand(string s){
+    value = s;
+}
+int FuncCommand::execute(int i, vector<string> v ) {
+    int found = v[0].find("var");
+    string name="";
+    found++;
+    //add the var in the start
+    if ((found != string::npos)) {
+        while(found< v[0].length()) {
+            name += v[0][found];
+            found++;
+        }
+        variables::getInstance()->addVar(name, "", stof(this->value), false);
+    }
+    //delete the start of the vector
+    v.erase(v.begin());
+    v.erase(v.begin()+1);
+
+    parser *p = new parser(v);
+        p->parse();
+        return 1;
+    }
+

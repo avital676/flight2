@@ -22,6 +22,7 @@ public:
     virtual int execute(int, vector<string>){} ;
     float express(string s);
     string spaceDelete(string input);
+    ~command(){};
 
 };
 
@@ -32,6 +33,7 @@ public:
     int numOfPar = 1;
     //void openServer(string p, bool &open);
     int execute(int, vector<string>) override ;
+    ~openServerCommand(){};
 };
 
 int clientMng(string port, string ip);
@@ -40,12 +42,14 @@ class ConnectCommand : public command{
 public:
     int numOfPar = 2;
     int execute(int, vector<string>) override ;
+    ~ConnectCommand(){};
 };
 
 class DefineVarCommand : public command {
 public:
     int numOfPar = 2;
     int execute(int, vector<string>) override ;
+    ~DefineVarCommand(){};
 };
 
 class ConditionParser: public command{
@@ -55,7 +59,7 @@ public:
     ConditionParser(string);
     void setCom(command a);
     int execute(int, vector<string>) override;
-
+    ~ConditionParser(){};
 
     };
 
@@ -65,6 +69,7 @@ public:
     bool status = false;
     ifCommand(){}
     int execute(int, vector<string>) override ;
+    ~ifCommand(){};
 
 };
 
@@ -73,16 +78,26 @@ public:
     bool status = false;
     int checkStatus(int i, vector<string> v, int index);
     int execute(int, vector<string>) override ;
+    ~loopCommand(){};
 };
 
 class PrintCommand: public command {
 public:
     int execute(int, vector<string>) override ;
+    ~PrintCommand(){};
 };
 
 class SleepCommand: public command {
 public:
     int execute(int, vector<string>) override ;
+    ~SleepCommand(){};
 };
+class FuncCommand: public command {
+public:
+    string value;
+    FuncCommand(string s1);
+    int execute(int, vector<string>) override ;
+};
+
 
 #endif //UNTITLED6_COMMAND_H

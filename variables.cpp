@@ -35,17 +35,11 @@ void variables::addVar(string name, string s, float value, bool f) {
 
 void variables::setVarByName(string name, float value) {
     mutex_lock.lock();
-//    if (name =="aileron"){
-//        cout<<value;
-//        cout<<" value from set"<<endl;
-//    }
+
     if(nameMap.find(name) != nameMap.end()) {
         nameMap.find(name)->second->setVal(value);
     }
-//    if (name =="aileron"){
-//        cout<<getValueByName("aileron");
-//        cout<<" value from set"<<endl;
-//    }
+
     varObj *v = nameMap.find(name)->second;
     q.push(*v);
     mutex_lock.unlock();
@@ -53,14 +47,8 @@ void variables::setVarByName(string name, float value) {
 
 void variables::setVarBySim(string sim, float value) {
     mutex_lock.lock();
-//    if (sim == "/instrumentation/heading-indicator/offset-deg") {
-//        cout<<sim<<endl;
-//        cout<<value<<endl;
-//    }
     if(simMap.find(sim) != simMap.end()) {
-        //cout << simMap.find(sim)->second->getVal() << endl;
         simMap.find(sim)->second->setVal(value);
-        //cout << simMap.find(sim)->second->getVal() << endl;
     }
     mutex_lock.unlock();
 }

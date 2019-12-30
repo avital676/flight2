@@ -22,7 +22,7 @@ void server::dataToMap(char* data) {
     string sim_name;
     string word1=string(data);
     if (word1 == "") {
-        cout << "empty input" << endl;
+       // cout << "empty input" << endl;
     }
     //cout << word1 << endl;
     for (i = 0; i < word1.size(); i++) {
@@ -34,18 +34,6 @@ void server::dataToMap(char* data) {
             }
            float value = stof(s.c_str());
            variables::getInstance()->setVarBySim(variables::getInstance()->nameArr[counter], value);
-//           if (counter == 7) {
-//               cout << "roll: " + s << endl;
-//           }
-//           if (counter == 20) {
-//               cout << "ailron: " + s << endl;
-//           }
-//            if (counter == 21) {
-//                cout << "elevator: " + s << endl;
-//            }
-//            if (counter == 8) {
-//                cout << "pitch: " + s << endl;
-//            }
            counter++;
            s = "";
         }

@@ -150,9 +150,9 @@ public:
                 token.erase(token.begin()+i);
             }
         }
-        for (int t = 0; t < token.size(); t++) {
-            cout << token[t] << endl;
-        }
+//        for (int t = 0; t < token.size(); t++) {
+//            cout << token[t] << endl;
+//        }
 
         file.close();
         return token;
