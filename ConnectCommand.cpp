@@ -61,7 +61,5 @@ int openCli(int port, string ip) {
         return -2;
     } else { // client is connected
         keepThreads::getInstance()->clientTread = thread(sendToSimu, client_socket);
-        keepThreads::getInstance()->clientTread.detach();
     }
-
 }

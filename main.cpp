@@ -1,13 +1,14 @@
-#include <iostream>
+
 #include "variables.h"
 #include "parser.h"
 #include "lexer.cpp"
 #include "keepThreads.h"
 #include <string>
-#include "string.h"
 #include "Interpreter.h"
 #include <algorithm>
+
 using namespace std;
+
 int main(int argc, char *argv[]) {
     variables::getInstance();
     lexer l;

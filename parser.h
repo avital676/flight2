@@ -1,6 +1,3 @@
-//
-// Created by avital on 16/12/2019.
-//
 
 #ifndef FLIGHT1_PARSER_H
 #define FLIGHT1_PARSER_H
@@ -21,7 +18,5 @@ public:
     void parse();
     ~parser();
 };
-
-
 
 #endif //FLIGHT1_PARSER_H

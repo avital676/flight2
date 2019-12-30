@@ -1,6 +1,3 @@
-//
-// Created by avital on 22/12/2019.
-//
 
 #ifndef FLIGHT2_VAROBJ_H
 #define FLIGHT2_VAROBJ_H
