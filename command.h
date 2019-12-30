@@ -92,11 +92,4 @@ public:
     ~SleepCommand(){};
 };
 
-class FuncCommand: public command {
-public:
-    string value;
-    FuncCommand(string s1);
-    int execute(int, vector<string>) override ;
-};
-
 #endif //UNTITLED6_COMMAND_H

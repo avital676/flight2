@@ -1,0 +1,16 @@
+Flight program:
+
+Our program deals with cummunicating with a flight simulator - FlightGear.
+The program contains a server code and a cliend code, both receiving/sending data from/to the simulator.
+
+The server is in charge of getting values from the simulator and updating them in the program. It gets the flight parameters every few seconds and updates the data so the rest of the code can use it.
+
+The client is in charge of updating the simulator with changes made during the program, so the simulator could respond to these changes.
+
+We used multiple threads in order to run the server, the client and the main thread simultaniously.
+
+Also, we used a Singelton Design-Pattern in order to have a single instance of the class that holds the flight parameters as a map of variables that could be accessed anywhere in the program. This enabled a synchronization between all parts of the code regarding flight values.
+
+The code runs over a text file given as a program argumant, and executes the commands written in it using methods we implemented in several classes, using inheritance.
+
+
