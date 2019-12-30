@@ -1,10 +1,6 @@
-//
-// Created by avital on 12/12/2019.
-//
 
 #include "variables.h"
 #include <string>
-#include <iostream>
 
 using namespace std;
 
@@ -12,17 +8,21 @@ variables* variables::instance = 0;
 
 using namespace std;
 
+// Constructor:
 variables::variables() {
     initialize();
 }
 
+// Get instance of this class:
 variables* variables::getInstance() {
     if (!instance)
         instance = new variables;
     return instance;
 }
 
+// Add variable to map with a given name, sim, value and f:
 void variables::addVar(string name, string s, float value, bool f) {
+    // lock mutex to prevent threads collision, and unlock it after the changes:
     mutex_lock.lock();
     varObj* v = new varObj();
     v->setSim(s);
@@ -33,19 +33,22 @@ void variables::addVar(string name, string s, float value, bool f) {
     mutex_lock.unlock();
 }
 
+// Set an existing variable (by its name) with a new given value:
 void variables::setVarByName(string name, float value) {
+    // lock mutex to prevent threads collision, and unlock it after the changes:
     mutex_lock.lock();
-
     if(nameMap.find(name) != nameMap.end()) {
         nameMap.find(name)->second->setVal(value);
     }
-
     varObj *v = nameMap.find(name)->second;
+    // push the changed var to vector of changes:
     q.push(*v);
     mutex_lock.unlock();
 }
 
+// Set an existing variable (by its sim) with a new given value:
 void variables::setVarBySim(string sim, float value) {
+    // lock mutex to prevent threads collision, and unlock it after the changes:
     mutex_lock.lock();
     if(simMap.find(sim) != simMap.end()) {
         simMap.find(sim)->second->setVal(value);
@@ -53,16 +56,17 @@ void variables::setVarBySim(string sim, float value) {
     mutex_lock.unlock();
 }
 
+// Return value of a var by its name:
 float variables::getValueByName(string name) {
     return nameMap[name]->getVal();
 }
 
-
-
+// Return a copy of the variables map:
 unordered_map<string,varObj*> variables::getNameMap() {
     return nameMap;
 }
 
+// Return a vector of the variables changed:
 vector<pair<string, float>> variables::getChangedVars() {
     vector<pair<string, float>> changedVars;
     while (!q.empty()) {
@@ -75,6 +79,7 @@ vector<pair<string, float>> variables::getChangedVars() {
     return changedVars;
 }
 
+// Initialize an array of sims:
 void variables::initialize() {
     string name;
     name = "/instrumentation/airspeed-indicator/indicated-speed-kt";

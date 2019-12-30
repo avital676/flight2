@@ -1,6 +1,3 @@
-//
-// Created by avital on 16/12/2019.
-//
 
 #ifndef FLIGHT1_PARSER_H
 #define FLIGHT1_PARSER_H
@@ -20,7 +17,5 @@ public:
     parser(vector<string> v);
     void parse();
 };
-
-
 
 #endif //FLIGHT1_PARSER_H

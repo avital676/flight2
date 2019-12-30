@@ -15,8 +15,8 @@ int main(int argc, char *argv[]) {
     parser* p = new parser(v);
     keepThreads::getInstance()->is_open = true;
     p->parse();
-    keepThreads::getInstance()->is_open = false;
     keepThreads::getInstance()->serverTread.join();
     keepThreads::getInstance()->clientTread.join();
+    keepThreads::getInstance()->is_open = false;
     return 0;
 }

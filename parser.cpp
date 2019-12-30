@@ -1,14 +1,12 @@
-//
-// Created by avital on 12/12/2019.
-//
 
 #include <string>
 #include <vector>
 #include "parser.h"
 #include "variables.h"
-#include <iostream>
+
 using namespace std;
 
+// Constructor- initialize commands map:
 parser::parser(vector<string> v) {
     token = v;
     command *c = new openServerCommand;
@@ -25,63 +23,25 @@ parser::parser(vector<string> v) {
     comMap["Print"] = c;
     c = new SleepCommand;
     comMap["Sleep"] = c;
-
 }
 
+// Parse the token vector:
 void parser::parse() {
     int i = 0;
-    bool enter = false;
     command *c;
     while (i < token.size()) {
         if (token[i] == "") {
             i++;
         }
         unordered_map<string, varObj *> m = variables::getInstance()->getNameMap();
-        if (comMap.find(token[i]) != comMap.end()) {
+        if (comMap.find(token[i]) != comMap.end()) { // current token is a command:
             c = comMap[token[i]];
             i += c->execute(i, token);
-            enter = true;
-        } else if (m.find(token[i]) != m.end()) {
+        } else if (m.find(token[i]) != m.end()) { // current token is an existing variable
             i += comMap["var"]->execute(i, token);
-            enter = true;
-        } else {
+        } else { // current token is a new var declaration
             c = new DefineVarCommand;
             i += c->execute(i, token);
-            enter = true;
         }
-
     }
-//    delete comMap["sleep"];
-//    delete comMap["openDataServer"];
-//    delete comMap["connectControlClient"];
-//    delete comMap["var"];
-//    delete comMap["while"];
-//    delete comMap["if"];
-//    delete comMap["Print"];
-//    delete comMap["Sleep"];
 }
-//        if (token[i]=="takeoff") {
-//            cout<<"func enterence"<<endl;
-//            if (variables::getInstance()->funcMap.find(token[i]) != variables::getInstance()->funcMap.end()) {
-//                vector<string> temp = variables::getInstance()->funcMap.find(token[i])->second;
-//                command *c = new FuncCommand(token[i + 1]);
-//                i += c->execute(0, temp);
-//            } else {
-//                string name = token[i];
-//                cout<<name<<endl;
-//                i++;
-//                vector<string> temp;
-//                int pair =0;
-//                while ((token[i] != "}")||(pair!=0)) {
-//                    if (token[i].compare("{")) {
-//                        pair++;
-//                    }
-//                    if (token[i].compare("}")){
-//                        pair--;
-//                    }
-//                    temp.push_back(token[i]);
-//                    i++;
-//                }
-//                variables::getInstance()->funcMap[name] = temp;
-//            }
-//        }
