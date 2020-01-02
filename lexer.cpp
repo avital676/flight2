@@ -1,6 +1,4 @@
-//
-// Created by noa on 12/12/2019.
-//
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -11,7 +9,7 @@ using namespace std;
 class lexer {
 public:
     vector<string> lex(const char* s) {
-        //in word we save every tone the word we want to push into the vector.
+        // in word we save every time the word we want to push into the vector.
         string word = "";
         ifstream file;
         string line;
@@ -19,73 +17,73 @@ public:
         vector <string> token;
 
         freopen(s, "rb", stdin);
-        //split the code into lines - for its will be easy to work with
+        // split the code into lines - for its will be easy to work with
         while (getline(cin, line)) {
             linesVector.push_back(line);
 
         }
-        //we iterate every line and then every char in line.
+        // we iterate every line and then every char in line.
         for (int i = 0; i < linesVector.size(); i++) {
             for (int j = 0; j < linesVector[i].length(); j++) {
                 //if the wors id tab - delete it. and restart the word.
                 if (word == "\t") {
                     word = "";
                 }
-                //if the words contains += / -= we split the word different-
+                // if the words contains += / -= we split the word different-
                 size_t found = word.find("+=");
                 size_t found2 = word.find("-=");
-                //if the word contain +=
+                // if the word contain +=
                 if ((found != string::npos)) {
-                    //cut the word unteel the +=
+                    // cut the word until the +=
                     string sub = word.substr(0, found);
-                    //push it into the vector.
+                    // push it into the vector.
                     token.push_back(sub);
-                    //put into sub - +=
+                    // put into sub - +=
                     sub = word[found];
                     sub +=word[found + 1];
-                    //and push it into the vector
+                    // and push it into the vector
                     token.push_back(sub);
-                    //cut the expression after +=
+                    // cut the expression after +=
                     sub = linesVector[i].substr(j, linesVector[i].length());
-                    //if there is space
+                    // if there is space
                     if (sub[0]==' '){
                         sub=sub.substr(1, sub.length());
                     }
                     token.push_back(sub);
-                    //move to the next line.
+                    // move to the next line.
                     j = -1;
                     i++;
                     word = "";
                 }
-                    //if the word contains -=
+                    // if the word contains -=
                 else if ((found2 != string::npos)) {
-                    //cut the word unteel +=
+                    // cut the word until +=
                     string sub = word.substr(0, found2);
-                    //push it into the vector.
+                    // push it into the vector.
                     token.push_back(sub);
-                    //cut the -=
+                    // cut the -=
                     sub = word[found2];
                     sub +=word[found2 + 1];
-                    //push -= into the vector
+                    // push -= into the vector
                     token.push_back(sub);
-                    //cut the expression after -=
+                    // cut the expression after -=
                     sub = linesVector[i].substr(j, linesVector[i].length());
-                    //cut space
+                    // cut space
                     if (sub[0]==' '){
                         sub=sub.substr(1, sub.length());
                     }
                     token.push_back(sub);
-                    //move to the next line.
+                    // move to the next line.
                     j = -1;
                     i++;
                     word = "";
                 } else {
-                    //if the next char is ( or )
+                    // if the next char is ( or )
                     if ((linesVector[i][j] == '(') || (linesVector[i][j] == ')')) {
-                        //push the word unteel now.
+                        // push the word until now.
                         token.push_back(word);
                         int k = linesVector[i].length();
-                        //if after the ( there is {we want to cut diffrent.
+                        // if after the ( there is {we want to cut different.
                         size_t found = linesVector[i].find("{");
                         if (found != string::npos){
                             word=sub_last_tub(linesVector[i], j+1, found-2);
@@ -93,10 +91,10 @@ public:
                             word=linesVector[i][found];
                         }
                         else {
-                            //we want to save the all expression inside the () as one token
+                            // we want to save the all expression inside the () as one token
                             word = sub_last_tub(linesVector[i], j + 1, linesVector[i].length() - 1);
                         }
-                        //somtimes inside the () there is , so we need to cut it between the ,.
+                        // sometimes inside the () there is , so we need to cut it between the ,.
                         if (word[word.length()-1]!='"') {
                             for (int t = 0; t < word.length(); t++) {
                                 if (word[t] == ',') {
@@ -108,43 +106,43 @@ public:
                                 }
                             }
                         }
-                        //if there is "
+                        // if there is "
                         if (word[0]=='"'){
                             int size = token.size();
-                            //if we have print we need ro dave the all print as one token.
+                            // if we have print we need ro dave the all print as one token.
                             if (token[size-1]!="Print") {
                                 word = sub_last_tub(word, 1, word.length() - 1);
                             }
                         }
                         token.push_back(word);
-                        //move to the next line.
+                        // move to the next line.
 
                         j = -1;
                         i++;
                         word = "";
                     } else {
-                        //-> <- we want to save the -> -< as one token.
+                        // -> <- we want to save the -> -< as one token.
                         if (((linesVector[i][j] == '-') && (linesVector[i][j + 1] == '>')) ||
                             (((linesVector[i][j] == '<') && (linesVector[i][j + 1] == '-')))) {
-                            //push the word unteel the -> -<
+                            // push the word until the -> -<
                             token.push_back(word);
                             word = "";
-                            //push the -> -<
+                            // push the -> -<
                             word += linesVector[i][j];
                             word += linesVector[i][j + 1];
                             j = j + 1;
                             token.push_back(word);
                             word = "";
                         } else {
-                            //if the word has = (only =) not != += -=....
+                            // if the word has = (only =) not != += -=....
                             if ((linesVector[i][j] == '=')&&(linesVector[i][j-1]!='+')&&(linesVector[i][j-1]!='-')
                                 &&(linesVector[i][j-1]!='<')&&((linesVector[i][j-1]!='>'))&&(linesVector[i][j-1]!='!')&&(linesVector[i][j-1]!='=')&&(linesVector[i][j+1]!='=')) {
-                                //push the word unteel =
+                                // push the word until =
                                 token.push_back(word);
-                                //push the =
+                                // push the =
                                 word = linesVector[i][j];
                                 token.push_back(word);
-                                //if there is space
+                                // if there is space
                                 if (linesVector[i][j+1]==' '){
                                     word = linesVector[i].substr(j + 2, linesVector[i].length());
                                 }
@@ -154,7 +152,7 @@ public:
                                 token.push_back(word);
                                 word = "";
                                 j = linesVector[i].length();
-                                //if there is {} we cut only them in one toke.
+                                // if there is {} we cut only them in one toke.
                             } else if ((linesVector[i][j] == '{') || (linesVector[i][j] == '}')) {
                                 token.push_back(word);
                                 word = "";
@@ -162,9 +160,9 @@ public:
                                 j = j + 1;
                                 token.push_back(word);
                                 word = "";
-                                //if there is space-
+                                // if there is space-
                             } else if (linesVector[i][j] == ' ') {
-                                //dont push empty word.
+                                // dont push empty word.
                                 if (word!="") {
                                     token.push_back(word);
                                 }
@@ -177,24 +175,21 @@ public:
                 }
             }
         }
-        //remove all the empty token from the vector.
+        // remove all the empty token from the vector.
         for (int i=0; i<token.size(); i++){
             if ((token[i]=="")||(token[i]==" ")||(token[i]=="\t")){
                 token.erase(token.begin()+i);
             }
         }
-//        for (int t = 0; t < token.size(); t++) {
-//            cout << token[t] << endl;
-//        }
-
         file.close();
         return token;
-    }
-    string sub_last_tub(string s, int start, int end){
+}
+
+string sub_last_tub(string s, int start, int end) {
         string word="";
         for (int i=start; i< end; i++){
             word+=s[i];
         }
         return word;
-    }
+}
 };
